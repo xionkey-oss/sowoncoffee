@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소원커피 - Digital Menu</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 폰트: 고운 돋움 -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <!-- 아이콘 (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background-color: #fdfbf7;
+            color: #44403c;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen relative pb-24">
+
+    <!-- Header -->
+    <header
+        class="sticky top-0 z-50 bg-[#fdfbf7]/95 backdrop-blur-sm border-b border-stone-200 shadow-sm transition-all duration-300">
+        <div class="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="cursor-pointer">
+                <h1 class="text-2xl font-bold text-stone-800 tracking-tight">Sowon Coffee</h1>
+                <p class="text-xs text-stone-500">Coffee & Dessert Menu</p>
+            </div>
+            <button onclick="scrollToInfo()" class="p-2 rounded-full hover:bg-stone-100 transition text-stone-600">
+                <i data-lucide="info" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Category Filter -->
+        <nav class="max-w-2xl mx-auto px-4 pb-2">
+            <div class="flex space-x-2 overflow-x-auto hide-scrollbar py-2">
+                <button onclick="filterMenu('all')"
+                    class="filter-btn active px-4 py-2 rounded-full text-sm font-bold bg-stone-800 text-white whitespace-nowrap transition-all shadow-md">
+                    전체보기
+                </button>
+                <button onclick="filterMenu('coffee')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    ☕ 커피
+                </button>
+                <button onclick="filterMenu('drink')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    🥤 음료
+                </button>
+                <button onclick="filterMenu('dessert')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    🍰 디저트
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-4 py-6">
+        <div id="menu-grid" class="grid grid-cols-1 gap-4">
+            <!-- 자바스크립트로 메뉴 카드가 생성됩니다 -->
+        </div>
+
+        <!-- 체험/스페셜 메뉴 섹션 -->
+        <div class="mt-12 mb-6" id="special-section">
+            <h2 class="text-lg font-bold text-stone-800 mb-4 flex items-center">
+                <i data-lucide="sparkles" class="w-5 h-5 mr-2 text-yellow-600"></i> 스페셜 체험
+            </h2>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100">
+                <div class="flex justify-between items-center border-b border-stone-100 pb-4 mb-4">
+                    <div>
+                        <h3 class="font-bold text-stone-800 text-lg">나만의 드립백 만들기</h3>
+                        <p class="text-sm text-stone-500">2인 이상 가능</p>
+                    </div>
+                    <span class="font-bold text-stone-700 text-lg">20,000원</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-stone-800 text-lg">커피 트래블</h3>
+                        <p class="text-sm text-stone-500">2인 이상 가능</p>
+                    </div>
+                    <span class="font-bold text-stone-700 text-lg">30,000원</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div id="info-section"
+            class="mt-8 bg-stone-100 rounded-xl p-6 text-sm text-stone-600 leading-relaxed shadow-inner">
+            <h3 class="font-bold text-stone-800 mb-4 text-base flex items-center">
+                <i data-lucide="clipboard-list" class="w-4 h-4 mr-2"></i> 주문 가이드
+            </h3>
+            <ul class="space-y-3 list-disc list-inside">
+                <li><span class="font-bold text-stone-800">핸드드립 원칙:</span> 아메리카노는 기본 핸드드립으로 추출합니다.</li>
+                <li><span class="font-bold text-stone-800">가격 정책:</span> HOT / ICE 가격은 동일합니다. (일부 음료 제외)</li>
+                <li><span class="font-bold text-stone-800">기본 2샷:</span> 모든 커피는 기본 투 샷(2 shot) 기준입니다.</li>
+                <li><span class="font-bold text-stone-800">추가 옵션:</span> 샷 / 시럽 / 휘핑 추가 시 금액이 발생합니다.</li>
+                <li class="pt-3 border-t border-stone-200 mt-2 text-stone-700">
+                    <span class="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Size Up</span>
+                    아메리카노 <span class="font-bold">+1.0</span> / 라떼 <span class="font-bold">+1.5</span>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-10 text-stone-400 text-xs">
+        <p class="mb-2">Sowon Coffee Menu</p>
+        <p class="text-[10px] opacity-70">Updated 2024</p>
+    </footer>
+
+    <script>
+        // --- 데이터 정의 (레시피 데이터는 제거하고 메뉴판용 데이터만 유지) ---
+        const menuData = [
+            // --- COFFEE ---
+            {
+                id: 'espresso', category: 'coffee', name: '에스프레소', price: 3300, desc: '진한 커피의 정수 (19.5g)', tags: ['HOT']
+            },
+            {
+                id: 'americano_blend', category: 'coffee', name: '아메리카노 (블렌드)', price: 3300, desc: '고소하고 묵직한 하우스 블렌드', tags: ['HOT', 'ICE']
+            },
+            {
+                id: 'americano_single', category: 'coffee', name: '싱글오리진 아메리카노', price: 5000, desc: '프리미엄 원두 핸드드립', tags: ['HOT', 'ICE']
+            },
+            {
+                id: 'cafe_latte', category: 'coffee', name: '카페 라떼', price: 4300, desc: '고소한 우유와 에스프레소의 조화', tags: ['HOT', 'ICE']
+            },
+            {
+                id: 'coldbrew', category: 'coffee', name: '콜드브루', price: 4500, desc: '깔끔하고 청량한 맛', tags: ['ICE']
+            },
+            {
+                id: 'coldbrew_latte', category: 'coffee', name: '콜드브루 라떼', price: 5000, desc: '숙성된 콜드브루의 부드러움', tags: ['ICE']
+            },
+            {
+                id: 'sweet_latte', category: 'coffee', name: '바닐라 / 모카 / 마끼아또', price: 4800, desc: '달콤한 풍미가 가득한 라떼', tags: ['HOT', 'ICE']
+            },
+            {
+                id: 'einspanner', category: 'coffee', name: '아인슈패너 (비엔나)', price: 5000, desc: '단짠단짠 수제 크림 커피', tags: ['Only ICE']
+            },
+
+            // --- DRINK ---
+            {
+                id: 'tea_chamomile', category: 'drink', name: '유기농 허브차 (캐모마일)', price: 3500, desc: '심신 안정 (ICE +500원)', tags: ['HOT', 'ICE']
+            },
+            {
+                id: 'fruit_latte', category: 'drink', name: '수제 과일 라떼', price: 5000, desc: '딸기 등 신선한 계절 과일', tags: ['ICE']
+            },
+            {
+                id: 'passion_fruit', category: 'drink', name: '수제 패션후르츠', price: 5000, desc: '톡톡 씹히는 상큼한 에이드', tags: ['ICE']
+            },
+            {
+                id: 'carrot_apple', category: 'drink', name: '당근아 사과해', price: 5000, desc: '100% 착즙 쥬스 (작은컵)', tags: ['ICE']
+            },
+            {
+                id: 'choco_greentea', category: 'drink', name: '초코 / 녹차 라떼', price: 4000, desc: '달콤하고 진한 라떼', tags: ['HOT', 'ICE']
+            },
+            {
+                id: 'iced_tea', category: 'drink', name: '복숭아 아이스티', price: 3000, desc: '시원하고 달콤한 아이스티', tags: ['ICE']
+            },
+
+            // --- DESSERT ---
+            {
+                id: 'cake_basque', category: 'dessert', name: '바스크 치즈케이크', price: 6000, desc: '진한 치즈의 풍미와 스모키함', tags: ['CAKE']
+            },
+            {
+                id: 'cake_strawberry', category: 'dessert', name: '딸기 케이크', price: 7000, desc: '부드러운 생크림과 생딸기', tags: ['Season']
+            },
+            {
+                id: 'snack_oranda', category: 'dessert', name: '수제 오란다', price: 2000, desc: '딱딱하지 않은 바삭 달콤 간식', tags: ['Snack']
+            },
+            {
+                id: 'snack_walnut', category: 'dessert', name: '수제 호두정과', price: 5000, desc: '오븐에 구운 고소한 영양 간식', tags: ['Gift']
+            }
+        ];
+
+        const grid = document.getElementById('menu-grid');
+        const btns = document.querySelectorAll('.filter-btn');
+
+        function formatPrice(price) {
+            return price.toLocaleString() + '원';
+        }
+
+        function scrollToInfo() {
+            document.getElementById('info-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderMenu(filterCategory) {
+            grid.innerHTML = '';
+
+            // 필터 버튼 스타일 업데이트
+            btns.forEach(btn => {
+                if (btn.innerText.includes(filterCategory === 'all' ? '전체' :
+                    filterCategory === 'coffee' ? '커피' :
+                        filterCategory === 'drink' ? '음료' : '디저트')) {
+                    btn.classList.remove('bg-white', 'text-stone-600', 'border');
+                    btn.classList.add('bg-stone-800', 'text-white');
+                } else {
+                    btn.classList.add('bg-white', 'text-stone-600', 'border');
+                    btn.classList.remove('bg-stone-800', 'text-white');
+                }
+            });
+
+            const filteredData = filterCategory === 'all'
+                ? menuData
+                : menuData.filter(item => item.category === filterCategory);
+
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl p-5 shadow-sm border border-stone-100 flex justify-between items-center group hover:border-stone-200 transition-colors';
+
+                // Tags
+                let tagsHtml = '';
+                if (item.tags) {
+                    item.tags.forEach(tag => {
+                        let tagClass = 'text-stone-500 bg-stone-100';
+                        if (tag === 'HOT') tagClass = 'text-red-600 bg-red-50';
+                        if (tag === 'ICE') tagClass = 'text-blue-600 bg-blue-50';
+                        if (tag === 'Only ICE') tagClass = 'text-blue-700 bg-blue-100 font-bold';
+                        if (tag === 'Best' || tag === 'Gift') tagClass = 'text-amber-700 bg-amber-50';
+                        if (tag === 'CAKE') tagClass = 'text-pink-600 bg-pink-50';
+
+                        tagsHtml += `<span class="text-[10px] px-2 py-0.5 rounded-full ${tagClass} mr-1">${tag}</span>`;
+                    });
+                }
+
+                card.innerHTML = `
+                    <div class="flex-1 pr-4">
+                        <div class="flex items-center mb-1">
+                            <h3 class="font-bold text-stone-800 text-lg tracking-tight mr-2 group-hover:text-stone-600 transition-colors">${item.name}</h3>
+                        </div>
+                        <p class="text-xs text-stone-500 mb-2 line-clamp-1">${item.desc}</p>
+                        <div class="flex flex-wrap">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="block font-bold text-stone-700 text-lg whitespace-nowrap">${formatPrice(item.price)}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 초기 렌더링
+        renderMenu('all');
+        lucide.createIcons();
+
+        // 전역 함수
+        window.filterMenu = renderMenu;
+        window.scrollToInfo = scrollToInfo;
+    </script>
+</body>
+
+</html>

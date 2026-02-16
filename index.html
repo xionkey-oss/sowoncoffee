@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소원커피 아카이브 | Sowon Coffee Archive</title>
+    <!-- 폰트: 우아한 명조체(Gowun Batang)와 깔끔한 고딕체(Pretendard) -->
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* 컬러 팔레트: 커피 & 럭셔리 -> 퍼플 & 럭셔리 */
+            --primary-bg: #fcfbfd;      /* 연한 라벤더 화이트 */
+            --card-bg: #ffffff;         /* 카드 배경 */
+            --text-main: #2d2430;       /* 짙은 퍼플 블랙 (텍스트) */
+            --text-sub: #655c6b;        /* 뮤트 퍼플 그레이 (보조 텍스트) */
+            
+            --accent-gold: #c5a059;     /* 엘레강스 골드 (포인트) */
+            --accent-brown: #5e3a75;    /* 딥 로얄 퍼플 (강조) */
+            
+            --border-color: #e6e1eb;    /* 연한 퍼플 그레이 테두리 */
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1; /* footer를 바닥으로 밀어내기 위함 */
+        }
+
+        /* --- 헤더 영역 --- */
+        header {
+            text-align: center;
+            padding: 80px 0 60px 0;
+            margin-bottom: 40px;
+        }
+        
+        .brand-eng {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: 'Gowun Batang', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .header-desc {
+            margin-top: 20px;
+            font-family: 'Gowun Batang', serif;
+            color: var(--text-sub);
+            font-size: 1.1rem;
+        }
+
+        /* --- 메인 네비게이션 그리드 --- */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2열 배치 */
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        /* 큰 카드 스타일 */
+        .nav-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px; /* 약간의 둥근 모서리 */
+            padding: 40px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 300px; /* 고정 높이로 통일감 */
+            transition: all 0.4s ease;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(94, 58, 117, 0.03);
+            overflow: hidden;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(94, 58, 117, 0.12);
+            border-color: var(--accent-gold);
+        }
+
+        /* 카드 내부 장식 선 */
+        .nav-card::after {
+            content: '';
+            position: absolute;
+            top: 20px; left: 20px; right: 20px; bottom: 20px;
+            border: 1px solid transparent;
+            transition: border-color 0.4s ease;
+            pointer-events: none;
+        }
+        .nav-card:hover::after {
+            border-color: rgba(197, 160, 89, 0.3); /* 호버 시 안쪽에 금색 테두리 */
+        }
+
+        /* 아이콘/숫자/영문 타이틀 */
+        .nav-eng-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent-brown);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .nav-kor-title {
+            font-family: 'Gowun Batang', serif;
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            margin-bottom: 10px;
+        }
+        
+        .nav-desc {
+            font-size: 0.9rem;
+            color: #999;
+            font-weight: 300;
+        }
+
+        /* 화살표 아이콘 */
+        .nav-arrow {
+            margin-top: 30px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+            transition: all 0.3s ease;
+        }
+        .nav-card:hover .nav-arrow {
+            background-color: var(--accent-gold);
+            border-color: var(--accent-gold);
+            color: white;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .nav-grid {
+                grid-template-columns: 1fr; /* 모바일에서는 1열 */
+            }
+            .nav-card {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="brand-eng">Premium Coffee & Archive</div>
+            <h1>SOWON COFFEE</h1>
+            <p class="header-desc">소원커피의 네 가지 기록 보관소</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="nav-grid">
+            
+            <!-- 1. MENU Archive -->
+            <!-- 연결 파일: menu/index.html (메뉴 목록 페이지) -->
+            <a href="data/menu.html" class="nav-card">
+                <span class="nav-kor-title">메뉴 아카이브</span>
+                <span class="nav-eng-title">MENU</span>
+                <span class="nav-desc">소원커피 메뉴</span>
+                <div class="nav-arrow">→</div>
+            </a>
+
+            <!-- 2. SINGLE ORIGIN Archive -->
+            <!-- 연결 파일: coffee/index.html (원두 목록 페이지) -->
+            <a href="data/single_origin.html" class="nav-card">
+                <span class="nav-kor-title">커피 종류 아카이브</span>
+                <span class="nav-eng-title">SINGLE ORIGIN</span>
+                <span class="nav-desc">소원커피 싱글 커피 소개</span>
+                <div class="nav-arrow">→</div>
+            </a>
+
+            <!-- 3. RECIPE Archive -->
+            <!-- 연결 파일: recipe/index.html (레시피 목록 페이지) -->
+            <a href="data/recipe.html" class="nav-card">
+                <span class="nav-kor-title">레시피 아카이브</span>
+                <span class="nav-eng-title">RECIPE</span>
+                <span class="nav-desc">소원커피 음료 만들기</span>
+                <div class="nav-arrow">→</div>
+            </a>
+
+            <!-- 4. OPEN / CLOSE Archive -->
+            <!-- 연결 파일: notice/index.html (운영 안내 목록 페이지) -->
+            <a href="data/open_close.html" class="nav-card">
+                <span class="nav-kor-title">운영 안내</span>
+                <span class="nav-eng-title">OPEN / CLOSE</span>
+                <span class="nav-desc">운영 스케줄 및 휴무 공지사항</span>
+                <div class="nav-arrow">→</div>
+            </a>
+            <!-- 5. Education Archive -->
+            <!-- 연결 파일: edu/index.html (라온트리 교육 목록 페이지) -->
+            <a href="data/edu.html" class="nav-card">
+                <span class="nav-kor-title">교육자료</span>
+                <span class="nav-eng-title">소원커피 교육</span>
+                <span class="nav-desc">소원커피 교육 페이지</span>
+                <div class="nav-arrow">→</div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div>&copy; 2026 Sowon Coffee Archive. All rights reserved.</div>
+    </footer>
+
+</body>
+</html>

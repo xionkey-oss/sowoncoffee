@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOWON COFFEE | Specialty Coffee Class</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            50: '#f9f5f3',
+                            100: '#f0e6e0',
+                            200: '#dec6b9',
+                            300: '#cba693',
+                            400: '#b8866e',
+                            500: '#a6664d',
+                            600: '#85523d',
+                            700: '#6f4433',
+                            800: '#4e3024',
+                            900: '#362119',
+                            950: '#1f130e',
+                        },
+                        gold: {
+                            400: '#d4af37',
+                            500: '#b5932b',
+                            600: '#967820',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif KR"', 'serif'],
+                        display: ['"Playfair Display"', '"Noto Serif KR"', 'serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80')",
+                        'texture': "url('https://www.transparenttextures.com/patterns/dark-matter.png')",
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-padding-top: 80px;
+            /* 헤더 높이만큼 스크롤 여백 */
+        }
+
+        body {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .text-shadow {
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: #d4af37;
+        }
+
+        .bean-graphic {
+            width: 40px;
+            height: 56px;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+            box-shadow: inset -4px -4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .bean-graphic::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(10deg);
+            width: 2px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 100%;
+            filter: blur(0.5px);
+        }
+
+        /* --- Animation Styles --- */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Steaming Line Animation */
+        .steaming-line {
+            display: none;
+            position: absolute;
+            top: 24px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #4e3024;
+            z-index: 0;
+            transition: width 1.5s ease-out;
+        }
+
+        .steaming-line.active {
+            width: 100%;
+        }
+
+        @media (min-width: 1024px) {
+            .steaming-line {
+                display: block;
+            }
+        }
+
+        /* Menu Cup Styles */
+        .menu-cup {
+            position: relative;
+            width: 80px;
+            height: 100px;
+            margin: 0 auto;
+            border: 2px solid #4e3024;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            background: white;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        .menu-cup-handle {
+            position: absolute;
+            top: 20px;
+            right: -25px;
+            width: 25px;
+            height: 40px;
+            border: 2px solid #4e3024;
+            border-left: none;
+            border-radius: 0 20px 20px 0;
+        }
+
+        .layer {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+            transition: height 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-coffee-50 text-coffee-900 antialiased selection:bg-gold-400 selection:text-white">
+
+    <!-- Header -->
+    <header
+        class="fixed w-full z-50 transition-all duration-300 bg-coffee-950/95 backdrop-blur-sm text-white py-4 border-b border-coffee-800 shadow-lg">
+        <div class="container mx-auto px-6 flex justify-between items-center relative">
+            <div class="flex items-center gap-3">
+                <i data-lucide="coffee" class="text-gold-400 w-8 h-8"></i>
+                <span class="font-display text-2xl font-bold tracking-widest text-gold-400">SOWON COFFEE</span>
+            </div>
+
+            <nav class="hidden md:flex space-x-8 text-sm font-medium tracking-widest text-gray-300">
+                <a href="#about" class="hover:text-gold-400 transition-colors">ABOUT</a>
+                <a href="#curriculum" class="hover:text-gold-400 transition-colors">CURRICULUM</a>
+                <a href="#understanding" class="hover:text-gold-400 transition-colors">COFFEE</a>
+                <a href="#brewing" class="hover:text-gold-400 transition-colors">BREWING</a>
+                <a href="#practice" class="hover:text-gold-400 transition-colors">PRACTICE</a>
+                <a href="#contact" class="hover:text-gold-400 transition-colors">CONTACT</a>
+            </nav>
+
+            <button id="mobile-menu-btn" class="md:hidden text-white hover:text-gold-400 focus:outline-none">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu"
+            class="hidden absolute top-full left-0 w-full bg-coffee-950 border-t border-coffee-800 shadow-xl md:hidden overflow-hidden transition-all duration-300">
+            <div class="flex flex-col p-6 space-y-4 text-center text-sm font-medium tracking-widest text-gray-300">
+                <a href="#about"
+                    class="mobile-link hover:text-gold-400 transition-colors py-2 border-b border-coffee-800">ABOUT</a>
+                <a href="#curriculum"
+                    class="mobile-link hover:text-gold-400 transition-colors py-2 border-b border-coffee-800">CURRICULUM</a>
+                <a href="#understanding"
+                    class="mobile-link hover:text-gold-400 transition-colors py-2 border-b border-coffee-800">COFFEE</a>
+                <a href="#brewing"
+                    class="mobile-link hover:text-gold-400 transition-colors py-2 border-b border-coffee-800">BREWING</a>
+                <a href="#practice"
+                    class="mobile-link hover:text-gold-400 transition-colors py-2 border-b border-coffee-800">PRACTICE</a>
+                <a href="#contact" class="mobile-link hover:text-gold-400 transition-colors py-2">CONTACT</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section
+        class="relative h-screen flex items-center justify-center bg-hero-pattern bg-cover bg-center bg-fixed text-center px-4">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative z-10 max-w-5xl mx-auto">
+            <h2
+                class="text-gold-400 text-sm md:text-lg tracking-[0.4em] mb-6 uppercase font-bold animate-[fadeInDown_1s_ease-out]">
+                Specialty Roastery & Academy</h2>
+            <h1
+                class="font-display text-5xl md:text-7xl lg:text-8xl text-white font-bold mb-8 text-shadow leading-tight animate-[fadeInUp_1s_ease-out]">
+                The Art of Coffee
+            </h1>
+            <p
+                class="text-gray-200 text-lg md:text-xl font-light mb-12 max-w-2xl mx-auto leading-relaxed animate-[fadeInUp_1.2s_ease-out]">
+                소원커피는 커피의 본질을 탐구하고,<br>최고의 한 잔을 위한 여정을 함께합니다.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center animate-[fadeInUp_1.4s_ease-out]">
+                <a href="#curriculum"
+                    class="px-12 py-4 border border-gold-400 text-gold-400 hover:bg-gold-400 hover:text-coffee-950 transition-all duration-300 text-sm tracking-[0.2em] uppercase font-bold">
+                    View Class
+                </a>
+                <a href="#contact"
+                    class="px-12 py-4 bg-coffee-600 border border-coffee-600 text-white hover:bg-coffee-700 transition-all duration-300 text-sm tracking-[0.2em] uppercase font-bold">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="text-white/70 w-8 h-8"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-gold-400 font-bold tracking-widest text-xs uppercase block mb-3">Who We Are</span>
+                <h2 class="text-4xl md:text-5xl font-display text-coffee-900 mb-6">SOWON COFFEE IS...</h2>
+                <p class="text-gray-600 leading-8 text-lg max-w-3xl mx-auto font-light">
+                    소원커피는 교육, 지역연계, 스페셜티 카페, 창업 컨설팅 등 커피를 매개로 다양한 가치를 만들어갑니다.
+                    생두의 선별부터 추출까지, 전문성을 바탕으로 진정성 있는 경험을 제공합니다.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <div class="group relative h-72 rounded-sm overflow-hidden shadow-lg cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        loading="lazy" alt="Education"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-coffee-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span
+                            class="text-white font-bold tracking-widest border border-white px-6 py-2">EDUCATION</span>
+                    </div>
+                </div>
+                <div class="group relative h-72 rounded-sm overflow-hidden shadow-lg cursor-pointer mt-0 lg:mt-12">
+                    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        loading="lazy" alt="Roasting"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-coffee-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-bold tracking-widest border border-white px-6 py-2">ROASTING</span>
+                    </div>
+                </div>
+                <div class="group relative h-72 rounded-sm overflow-hidden shadow-lg cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        loading="lazy" alt="Brewing"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-coffee-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-bold tracking-widest border border-white px-6 py-2">BREWING</span>
+                    </div>
+                </div>
+                <div class="group relative h-72 rounded-sm overflow-hidden shadow-lg cursor-pointer mt-0 lg:mt-12">
+                    <img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        loading="lazy" alt="Community"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-coffee-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span
+                            class="text-white font-bold tracking-widest border border-white px-6 py-2">COMMUNITY</span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-coffee-100 pt-10 grid md:grid-cols-2 gap-8 text-coffee-800 max-w-4xl mx-auto text-sm">
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-4"><span class="w-1.5 h-1.5 bg-gold-400 rounded-full"></span><span
+                            class="font-bold w-24">교육사업</span>바리스타 양성 및 로스팅 교육</li>
+                    <li class="flex items-center gap-4"><span class="w-1.5 h-1.5 bg-gold-400 rounded-full"></span><span
+                            class="font-bold w-24">지역연계</span>청소년 및 장애인 체험 활동 지원</li>
+                </ul>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-4"><span class="w-1.5 h-1.5 bg-gold-400 rounded-full"></span><span
+                            class="font-bold w-24">카페운영</span>스페셜티 로스터리 카페</li>
+                    <li class="flex items-center gap-4"><span class="w-1.5 h-1.5 bg-gold-400 rounded-full"></span><span
+                            class="font-bold w-24">창업지원</span>카페 창업 컨설팅 및 전문성 강화</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter 1: Professions -->
+    <section id="curriculum" class="py-24 bg-coffee-900 text-white relative">
+        <div class="absolute inset-0 bg-texture opacity-10"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-20">
+                <span class="text-gold-400 tracking-widest text-xs uppercase">Chapter 01</span>
+                <h2 class="text-3xl md:text-4xl font-display mt-2 section-title">커피를 통한 직업군</h2>
+                <p class="text-gray-400 mt-2 font-light">커피 산업을 구성하는 5가지 핵심 분야</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <!-- Profession Cards -->
+                <div
+                    class="bg-coffee-800 p-8 rounded border border-coffee-700 hover:border-gold-400 transition-all hover:-translate-y-2 group text-center">
+                    <i data-lucide="sprout"
+                        class="w-10 h-10 mx-auto text-gold-400 mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-lg font-bold mb-3 text-white">생두 (Green Bean)</h3>
+                    <p class="text-coffee-200 text-xs leading-relaxed">산지 방문, 무역, 수입 및 판매 관리</p>
+                </div>
+                <div
+                    class="bg-coffee-800 p-8 rounded border border-coffee-700 hover:border-gold-400 transition-all hover:-translate-y-2 group text-center">
+                    <i data-lucide="flame"
+                        class="w-10 h-10 mx-auto text-gold-400 mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-lg font-bold mb-3 text-white">원두 (Roasting)</h3>
+                    <p class="text-coffee-200 text-xs leading-relaxed">로스팅, 블렌딩, 제조 및 납품</p>
+                </div>
+                <div
+                    class="bg-coffee-800 p-8 rounded border border-coffee-700 hover:border-gold-400 transition-all hover:-translate-y-2 group text-center">
+                    <i data-lucide="coffee"
+                        class="w-10 h-10 mx-auto text-gold-400 mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-lg font-bold mb-3 text-white">추출 (Brewing)</h3>
+                    <p class="text-coffee-200 text-xs leading-relaxed">바리스타, 메뉴개발, 매장 운영</p>
+                </div>
+                <div
+                    class="bg-coffee-800 p-8 rounded border border-coffee-700 hover:border-gold-400 transition-all hover:-translate-y-2 group text-center">
+                    <i data-lucide="book-open"
+                        class="w-10 h-10 mx-auto text-gold-400 mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-lg font-bold mb-3 text-white">교육 (Education)</h3>
+                    <p class="text-coffee-200 text-xs leading-relaxed">트레이너, 커리큘럼 개발, 자격증</p>
+                </div>
+                <div
+                    class="bg-coffee-800 p-8 rounded border border-coffee-700 hover:border-gold-400 transition-all hover:-translate-y-2 group text-center">
+                    <i data-lucide="settings"
+                        class="w-10 h-10 mx-auto text-gold-400 mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-lg font-bold mb-3 text-white">장비 (Equipment)</h3>
+                    <p class="text-coffee-200 text-xs leading-relaxed">머신 수입, 설치, A/S 엔지니어</p>
+                </div>
+            </div>
+
+            <!-- Ecosystem Flow -->
+            <div class="mt-20 pt-10 border-t border-coffee-800 text-center">
+                <h3 class="text-xl font-display text-gold-400 mb-8">Organic Relationship Ecosystem</h3>
+                <div
+                    class="flex flex-col md:flex-row justify-center items-center gap-4 text-sm font-bold text-coffee-300">
+                    <span class="px-6 py-3 bg-coffee-950 rounded-full border border-coffee-700">생두</span>
+                    <i data-lucide="arrow-right" class="hidden md:block text-gold-400"></i>
+                    <i data-lucide="arrow-down" class="md:hidden text-gold-400"></i>
+                    <span class="px-6 py-3 bg-coffee-950 rounded-full border border-coffee-700">원두</span>
+                    <i data-lucide="arrow-right" class="hidden md:block text-gold-400"></i>
+                    <i data-lucide="arrow-down" class="md:hidden text-gold-400"></i>
+                    <span class="px-6 py-3 bg-coffee-950 rounded-full border border-coffee-700">추출</span>
+                    <i data-lucide="arrow-right" class="hidden md:block text-gold-400"></i>
+                    <i data-lucide="arrow-down" class="md:hidden text-gold-400"></i>
+                    <span class="px-6 py-3 bg-coffee-950 rounded-full border border-coffee-700">판매/서비스</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Chapter: Startup Checklist -->
+    <section class="py-24 bg-coffee-50 border-b border-coffee-200">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-coffee-600 tracking-widest text-xs uppercase">Special Chapter</span>
+                <h2 class="text-3xl md:text-4xl font-display mt-2 section-title">카페 창업을 위한 준비</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Checklist Items -->
+                <div class="bg-white p-6 rounded shadow-card hover:shadow-card-hover transition-shadow">
+                    <h4 class="font-bold text-lg mb-4 text-coffee-800 border-b-2 border-gold-400 pb-2">01. 컨셉</h4>
+                    <ul class="space-y-2 text-sm text-gray-600 check-list">
+                        <li>테이크아웃/배달 전문</li>
+                        <li>대형 베이커리 카페</li>
+                        <li>감성/디저트 카페</li>
+                        <li>스페셜티 전문점</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded shadow-card hover:shadow-card-hover transition-shadow">
+                    <h4 class="font-bold text-lg mb-4 text-coffee-800 border-b-2 border-gold-400 pb-2">02. 재정</h4>
+                    <ul class="space-y-2 text-sm text-gray-600 check-list">
+                        <li>임대보증금</li>
+                        <li>인테리어비</li>
+                        <li>장비 구입비</li>
+                        <li>운영 예비비</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded shadow-card hover:shadow-card-hover transition-shadow">
+                    <h4 class="font-bold text-lg mb-4 text-coffee-800 border-b-2 border-gold-400 pb-2">03. 기술</h4>
+                    <ul class="space-y-2 text-sm text-gray-600 check-list">
+                        <li>머신/그라인더 운용</li>
+                        <li>핸드드립/로스팅</li>
+                        <li>메뉴 레시피</li>
+                        <li>위생 관리</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded shadow-card hover:shadow-card-hover transition-shadow">
+                    <h4 class="font-bold text-lg mb-4 text-coffee-800 border-b-2 border-gold-400 pb-2">04. 행정</h4>
+                    <ul class="space-y-2 text-sm text-gray-600 check-list">
+                        <li>보건증/위생교육</li>
+                        <li>영업신고/사업자등록</li>
+                        <li>POS/인터넷/CCTV</li>
+                        <li>브랜딩(로고)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter 2: Understanding -->
+    <section id="understanding" class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-coffee-600 tracking-widest text-xs uppercase">Chapter 02</span>
+                <h2 class="text-3xl md:text-4xl font-display mt-2 section-title">커피에 대한 이해</h2>
+            </div>
+
+            <!-- 1. Coffee Grade -->
+            <div class="max-w-4xl mx-auto mb-20 bg-white border border-coffee-100 rounded-xl p-8 shadow-md">
+                <div class="text-center mb-10">
+                    <h3 class="text-2xl font-bold text-coffee-900 inline-block border-b-2 border-gold-400 pb-2">커피 등급
+                        (Coffee Grade)</h3>
+                </div>
+                <div class="flex flex-col items-center justify-center space-y-1">
+                    <div
+                        class="w-full max-w-[200px] bg-coffee-900 text-gold-400 py-3 text-center text-sm font-bold rounded-t-lg shadow-lg">
+                        SPECIALTY (80점+)</div>
+                    <div
+                        class="w-full max-w-[280px] bg-coffee-800 text-white py-3 text-center text-sm font-bold shadow">
+                        PREMIUM (75점)</div>
+                    <div class="w-full max-w-[360px] bg-coffee-600 text-white py-3 text-center text-sm shadow">HIGH
+                        COMMERCIAL (70점)</div>
+                    <div class="w-full max-w-[440px] bg-coffee-500 text-white py-3 text-center text-sm shadow">REGULAR
+                        COMMERCIAL (65점)</div>
+                    <div
+                        class="w-full max-w-[520px] bg-coffee-400 text-white py-3 text-center text-sm rounded-b-lg shadow">
+                        LOW COMMERCIAL</div>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-start border-t border-coffee-100 pt-16">
+                <!-- Info Column -->
+                <div class="space-y-8">
+                    <!-- Origin & Environment -->
+                    <div class="bg-coffee-50 p-8 rounded border-l-4 border-gold-400">
+                        <h3 class="text-xl font-bold text-coffee-900 mb-4 flex items-center gap-2">
+                            <i data-lucide="map-pin" class="text-gold-400"></i> 기원과 환경
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4 text-sm">
+                            커피는 6-7세기경 에티오피아의 목동 '칼디'에 의해 발견되었습니다.
+                            적도를 중심으로 한 '커피 벨트'(북위 25도~남위 25도)에서 재배되며,
+                            평균 25도의 기온과 풍부한 강우량이 필요합니다.
+                        </p>
+                    </div>
+
+                    <!-- Water & Temperature (Updated: 90-95) -->
+                    <div class="bg-blue-50/50 p-6 rounded border border-blue-100">
+                        <h3 class="text-lg font-bold text-coffee-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="droplet" class="text-blue-400 w-5 h-5"></i> 물과 온도 (Water & Temp)
+                        </h3>
+                        <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                            커피 한 잔의 98~99%는 물입니다. 미네랄이 적절한 연수(Soft Water)가 커피 성분을 잘 끌어내며 맛을 부드럽게 합니다.
+                        </p>
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                            <div class="bg-white p-2 rounded shadow-sm">
+                                <span class="block text-red-800 font-bold">약배전 (Light)</span>
+                                <span class="text-gray-500">90°C ~ 95°C</span>
+                            </div>
+                            <div class="bg-white p-2 rounded shadow-sm">
+                                <span class="block text-coffee-900 font-bold">강배전 (Dark)</span>
+                                <span class="text-gray-500">88°C ~ 90°C</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded border border-coffee-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-coffee-900 mb-4 text-center">품종 비교 (Variety)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-green-50 p-4 rounded text-center">
+                                <span class="block text-green-800 font-bold mb-1">아라비카</span>
+                                <span class="text-xs text-green-600 mb-2 block font-serif italic">Arabica</span>
+                                <p class="text-xs text-gray-600">생산량 70%<br>풍부한 향미/산미<br>카페인 적음</p>
+                            </div>
+                            <div class="bg-gray-100 p-4 rounded text-center">
+                                <span class="block text-gray-800 font-bold mb-1">카네포라(로부스타)</span>
+                                <span class="text-xs text-gray-500 mb-2 block font-serif italic">Canephora</span>
+                                <p class="text-xs text-gray-600">생산량 30%<br>강한 쓴맛/바디감<br>카페인 많음</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tastes & Delicious Coffee -->
+                <div class="space-y-8">
+                    <!-- Flavor Wheel Section (Updated with SCA Image) -->
+                    <div class="bg-coffee-900 text-white p-8 rounded shadow-2xl">
+                        <h3 class="text-xl font-display text-gold-400 mb-8 text-center leading-relaxed">
+                            커피의 4가지 맛과<br>3천여가지 향을 찾아 떠나는 여행
+                        </h3>
+                        <div class="grid grid-cols-4 gap-4 text-center mb-6">
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="w-12 h-12 rounded-full border border-gold-400 flex items-center justify-center text-gold-400 font-bold mb-2">
+                                    단</div><span class="text-xs text-gray-400">Sweet</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="w-12 h-12 rounded-full border border-gold-400 flex items-center justify-center text-gold-400 font-bold mb-2">
+                                    신</div><span class="text-xs text-gray-400">Sour</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="w-12 h-12 rounded-full border border-gold-400 flex items-center justify-center text-gold-400 font-bold mb-2">
+                                    쓴</div><span class="text-xs text-gray-400">Bitter</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="w-12 h-12 rounded-full border border-gold-400 flex items-center justify-center text-gold-400 font-bold mb-2">
+                                    짠</div><span class="text-xs text-gray-400">Salty</span>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-gray-400 mb-6">Aroma: 과일, 꽃, 허브, 견과류, 초콜릿 등</p>
+
+                        <!-- [Updated] SCA Flavor Wheel -->
+                        <div class="mb-8 p-4 bg-white/10 rounded-lg backdrop-blur-sm border border-white/20">
+                            <h4
+                                class="text-sm font-bold text-gold-400 mb-4 text-center flex items-center justify-center gap-2">
+                                <i data-lucide="pie-chart" class="w-4 h-4"></i> SCA Flavor Wheel
+                            </h4>
+                            <div
+                                class="relative w-full aspect-square rounded-full overflow-hidden border-2 border-white/30 hover:scale-105 transition-transform duration-500 bg-white">
+                                <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1000&auto=format&fit=crop"
+                                    alt="Coffee Taster's Flavor Experience"
+                                    class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity">
+                            </div>
+                            <p class="text-center text-[10px] text-gray-400 mt-2">
+                                *SCA Flavor Wheel을 참고하여 다양한 향미를 표현해보세요.
+                            </p>
+                        </div>
+
+                        <!-- Cupping Protocol -->
+                        <div class="border-t border-coffee-700 pt-6">
+                            <h4
+                                class="text-sm font-bold text-gold-400 mb-4 text-center flex items-center justify-center gap-2">
+                                <i data-lucide="utensils-crossed" class="w-4 h-4"></i> Cupping Protocol
+                            </h4>
+                            <div class="flex justify-between items-start text-center text-[10px] text-gray-300">
+                                <div class="flex flex-col items-center gap-1 w-1/4">
+                                    <span
+                                        class="w-6 h-6 rounded-full bg-coffee-700 flex items-center justify-center text-gold-400 font-bold">1</span>
+                                    <strong>Fragrance</strong>
+                                    <span>분쇄 향</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 w-1/4">
+                                    <span
+                                        class="w-6 h-6 rounded-full bg-coffee-700 flex items-center justify-center text-gold-400 font-bold">2</span>
+                                    <strong>Aroma</strong>
+                                    <span>물 붓고 향</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 w-1/4">
+                                    <span
+                                        class="w-6 h-6 rounded-full bg-coffee-700 flex items-center justify-center text-gold-400 font-bold">3</span>
+                                    <strong>Break</strong>
+                                    <span>커피층 깨기</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 w-1/4">
+                                    <span
+                                        class="w-6 h-6 rounded-full bg-coffee-700 flex items-center justify-center text-gold-400 font-bold">4</span>
+                                    <strong>Slurp</strong>
+                                    <span>흡입/테이스팅</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delicious Coffee Criteria -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-coffee-600">
+                        <h3 class="text-xl font-bold text-coffee-900 mb-6 text-center">맛있는 커피의 기준</h3>
+                        <div class="space-y-3 text-sm text-gray-700">
+                            <!-- 1. Respect Preferences -->
+                            <div
+                                class="flex items-center gap-3 font-bold text-coffee-800 pb-3 mb-2 border-b border-gray-100">
+                                <i data-lucide="heart" class="text-red-500 w-5 h-5"></i>
+                                개인의 취향을 존중한다.
+                            </div>
+                            <div class="grid sm:grid-cols-1 gap-3 pl-2">
+                                <div class="flex items-center gap-3"><i data-lucide="check-circle-2"
+                                        class="text-gold-500 w-4 h-4"></i>충분한 맛의 길이 (Aftertaste)</div>
+                                <div class="flex items-center gap-3"><i data-lucide="check-circle-2"
+                                        class="text-gold-500 w-4 h-4"></i>맛의 연속성 (Continuity)</div>
+                                <div class="flex items-center gap-3"><i data-lucide="check-circle-2"
+                                        class="text-gold-500 w-4 h-4"></i>부드러움 (Softness)</div>
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="check-circle-2" class="text-gold-500 w-4 h-4 shrink-0"></i>
+                                    <span>선명한 캐릭터가 아니고 맛이 튀지 않음 <span class="text-xs text-gray-500 block sm:inline">(선명한
+                                            캐릭터는 괜찮음)</span></span>
+                                </div>
+                                <div class="flex items-center gap-3"><i data-lucide="check-circle-2"
+                                        class="text-gold-500 w-4 h-4"></i>물맛이 나지 않음</div>
+                                <div class="flex items-center gap-3"><i data-lucide="check-circle-2"
+                                        class="text-gold-500 w-4 h-4"></i>목넘김이 부드러움</div>
+                                <div class="flex items-center gap-3"><i data-lucide="check-circle-2"
+                                        class="text-gold-500 w-4 h-4"></i>얼굴 인상을 쓰지 않음</div>
+                                <div class="flex items-center gap-3"><i data-lucide="check-circle-2"
+                                        class="text-gold-500 w-4 h-4"></i>에너지를 사용하지 않음 (편안함)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter 3: Processing & Tools -->
+    <section id="brewing" class="py-24 bg-coffee-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-coffee-600 tracking-widest text-xs uppercase">Chapter 03</span>
+                <h2 class="text-3xl md:text-4xl font-display mt-2 section-title">가공방식 및 추출도구</h2>
+            </div>
+
+            <!-- Processing Methods Images (Updated to Local) -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
+                <div class="group relative overflow-hidden rounded shadow-lg">
+                    <img src="./image/natural.jpg" loading="lazy" alt="Natural Processing"
+                        class="w-full h-64 object-cover transition duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded w-fit mb-2">전통방식</span>
+                        <h4 class="text-gold-400 font-bold">내추럴 (Natural)</h4>
+                        <p class="text-gray-300 text-xs mt-1">체리 건조. 과일향과 바디감.</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded shadow-lg">
+                    <img src="./image/washed.jpeg" loading="lazy" alt="Washed Processing"
+                        class="w-full h-64 object-cover transition duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded w-fit mb-2">깔끔함</span>
+                        <h4 class="text-gold-400 font-bold">워시드 (Washed)</h4>
+                        <p class="text-gray-300 text-xs mt-1">과육 제거 후 세척. 선명한 산미.</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded shadow-lg">
+                    <img src="./image/honey.jpeg" loading="lazy" alt="Honey Processing"
+                        class="w-full h-64 object-cover transition duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[10px] bg-orange-500 text-white px-2 py-0.5 rounded w-fit mb-2">하이브리드</span>
+                        <h4 class="text-gold-400 font-bold">허니 (Honey)</h4>
+                        <p class="text-gray-300 text-xs mt-1">점액질 보존. 단맛과 밸런스.</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded shadow-lg">
+                    <img src="./image/anerobic.jpeg" loading="lazy" alt="Anaerobic Processing"
+                        class="w-full h-64 object-cover transition duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded w-fit mb-2">트렌드</span>
+                        <h4 class="text-gold-400 font-bold">무산소 (Anaerobic)</h4>
+                        <p class="text-gray-300 text-xs mt-1">독특한 향미와 강렬한 캐릭터.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roasting Levels Graphic -->
+            <div class="max-w-4xl mx-auto mb-24 text-center">
+                <h3 class="text-2xl font-display text-coffee-900 mb-10">Roasting Levels</h3>
+                <div class="grid grid-cols-3 gap-8">
+                    <div class="flex flex-col items-center">
+                        <div class="bean-graphic bg-[#e5c690] mb-4 shadow-xl"></div>
+                        <h4 class="font-bold text-coffee-800">약배전 (Light)</h4>
+                        <span class="text-xs text-gray-500 mt-1">Cinnamon / High</span>
+                        <p class="text-xs text-gray-600 mt-2">높은 산미, 원두 본연의 향</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="bean-graphic bg-[#8d5e38] mb-4 shadow-xl scale-110"></div>
+                        <h4 class="font-bold text-coffee-800">중배전 (Medium)</h4>
+                        <span class="text-xs text-gray-500 mt-1">City / Full City</span>
+                        <p class="text-xs text-gray-600 mt-2">단맛, 산미, 쓴맛의 밸런스</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="bean-graphic bg-[#3b261b] mb-4 shadow-xl"></div>
+                        <h4 class="font-bold text-coffee-800">강배전 (Dark)</h4>
+                        <span class="text-xs text-gray-500 mt-1">French / Italian</span>
+                        <p class="text-xs text-gray-600 mt-2">중후한 바디감, 쓴맛, 스모키</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [Added] Grind Size Guide -->
+            <div class="max-w-5xl mx-auto mb-16">
+                <h3 class="text-2xl font-display text-coffee-900 mb-8 text-center">Grind Size Guide</h3>
+                <div class="bg-white rounded-lg shadow-md p-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-4 border border-gray-100 rounded hover:shadow-md transition">
+                        <div class="h-16 flex items-center justify-center mb-2">
+                            <div class="flex gap-1 justify-center">
+                                <span class="w-3 h-3 bg-coffee-800 rounded-sm inline-block"></span>
+                                <span class="w-3 h-3 bg-coffee-800 rounded-sm inline-block"></span>
+                                <span class="w-2 h-3 bg-coffee-800 rounded-sm inline-block"></span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-coffee-800">Coarse (굵음)</h4>
+                        <p class="text-xs text-gray-500 mt-1">천일염 크기</p>
+                        <span
+                            class="text-[10px] bg-coffee-100 text-coffee-800 px-2 py-0.5 rounded-full mt-2 inline-block">프렌치
+                            프레스</span>
+                    </div>
+                    <div class="p-4 border border-gray-100 rounded hover:shadow-md transition">
+                        <div class="h-16 flex items-center justify-center mb-2">
+                            <div class="flex gap-0.5 justify-center flex-wrap w-12">
+                                <span class="w-1.5 h-1.5 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1.5 h-1.5 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1.5 h-1.5 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1.5 h-1.5 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1.5 h-1.5 bg-coffee-800 rounded-full inline-block"></span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-coffee-800">Medium (중간)</h4>
+                        <p class="text-xs text-gray-500 mt-1">꽃소금/모래 크기</p>
+                        <span
+                            class="text-[10px] bg-coffee-100 text-coffee-800 px-2 py-0.5 rounded-full mt-2 inline-block">핸드드립</span>
+                    </div>
+                    <div class="p-4 border border-gray-100 rounded hover:shadow-md transition">
+                        <div class="h-16 flex items-center justify-center mb-2">
+                            <div class="flex gap-[1px] justify-center flex-wrap w-12">
+                                <span class="w-1 h-1 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1 h-1 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1 h-1 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1 h-1 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1 h-1 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1 h-1 bg-coffee-800 rounded-full inline-block"></span>
+                                <span class="w-1 h-1 bg-coffee-800 rounded-full inline-block"></span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-coffee-800">Fine (고운)</h4>
+                        <p class="text-xs text-gray-500 mt-1">고운 소금/설탕</p>
+                        <span
+                            class="text-[10px] bg-coffee-100 text-coffee-800 px-2 py-0.5 rounded-full mt-2 inline-block">모카포트</span>
+                    </div>
+                    <div class="p-4 border border-gray-100 rounded hover:shadow-md transition">
+                        <div class="h-16 flex items-center justify-center mb-2">
+                            <div class="w-12 h-8 bg-coffee-800 rounded opacity-80"></div>
+                        </div>
+                        <h4 class="font-bold text-coffee-800">Extra Fine</h4>
+                        <p class="text-xs text-gray-500 mt-1">밀가루 느낌</p>
+                        <span
+                            class="text-[10px] bg-coffee-100 text-coffee-800 px-2 py-0.5 rounded-full mt-2 inline-block">에스프레소</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extraction Tools Images (Updated to Local) -->
+            <div>
+                <h3 class="text-2xl font-display text-coffee-900 mb-10 text-center">Extraction Tools</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/espress.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="Espresso Machine">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">에스프레소 머신</span>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/handespress.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="Manual Espresso">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">수동 에스프레소</span>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/mocapot.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="Moka Pot">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">모카포트</span>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/handdrip.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="Hand Drip">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">핸드드립 (V60)</span>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/coldbrew.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="Cold Brew">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">콜드브루</span>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/cyphon.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="Siphon">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">사이폰</span>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/frenchpress.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="French Press">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">프렌치 프레스</span>
+                    </div>
+                    <div class="text-center group">
+                        <div
+                            class="aspect-square rounded-full overflow-hidden mb-3 border-4 border-white shadow-lg mx-auto max-w-[150px]">
+                            <img src="./image/chesbe.jpeg" loading="lazy"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                                alt="Cezve">
+                        </div>
+                        <span class="font-bold text-coffee-800 text-sm">체즈베/이브릭</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Chapter 4: Practice -->
+    <section id="practice" class="py-24 bg-coffee-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-gold-400 tracking-widest text-xs uppercase">Chapter 04</span>
+                <h2 class="text-3xl md:text-4xl font-display mt-2 section-title">커피 추출 실습</h2>
+            </div>
+
+            <!-- Interactive Tool: Ratio Calculator -->
+            <div class="max-w-xl mx-auto mb-20 bg-coffee-800 rounded-lg border border-gold-600 p-6 shadow-xl">
+                <h3 class="text-center text-gold-400 font-bold mb-4 flex items-center justify-center gap-2">
+                    <i data-lucide="calculator" class="w-5 h-5"></i> Brew Ratio Calculator
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-300 mb-1">원두량 (Dose, g)</label>
+                        <input type="number" id="doseInput" value="20"
+                            class="w-full bg-coffee-900 border border-coffee-600 rounded p-2 text-white text-center focus:border-gold-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-300 mb-1">비율 (Ratio, 1:x)</label>
+                        <input type="number" id="ratioInput" value="15"
+                            class="w-full bg-coffee-900 border border-coffee-600 rounded p-2 text-white text-center focus:border-gold-400 focus:outline-none">
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-coffee-700 text-center">
+                    <p class="text-xs text-gray-400">목표 추출량 (Yield)</p>
+                    <p class="text-3xl font-bold text-white mt-1"><span id="yieldResult">300</span> <span
+                            class="text-sm font-normal text-gold-400">ml</span></p>
+                </div>
+                <script>
+                    const doseInput = document.getElementById('doseInput');
+                    const ratioInput = document.getElementById('ratioInput');
+                    const yieldResult = document.getElementById('yieldResult');
+
+                    function calculateYield() {
+                        const dose = parseFloat(doseInput.value) || 0;
+                        const ratio = parseFloat(ratioInput.value) || 0;
+                        yieldResult.textContent = dose * ratio;
+                    }
+
+                    doseInput.addEventListener('input', calculateYield);
+                    ratioInput.addEventListener('input', calculateYield);
+                </script>
+            </div>
+
+            <!-- Barista Tools Grid & Maintenance -->
+            <div class="max-w-4xl mx-auto mb-20 bg-coffee-800 rounded-lg border border-coffee-700 overflow-hidden">
+                <div class="p-8 pb-4">
+                    <h3 class="text-xl font-bold text-center text-gold-400 mb-8">Professional Barista Tools</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+                        <div><i data-lucide="utensils" class="mx-auto mb-3 text-gray-300"></i><span
+                                class="text-sm font-bold block">포터필터</span><span class="text-xs text-gray-500">PESADO
+                                58.5</span></div>
+                        <div><i data-lucide="layers" class="mx-auto mb-3 text-gray-300"></i><span
+                                class="text-sm font-bold block">디스트리뷰터</span></div>
+                        <div><i data-lucide="hammer" class="mx-auto mb-3 text-gray-300"></i><span
+                                class="text-sm font-bold block">탬퍼</span></div>
+                        <div><i data-lucide="wand-2" class="mx-auto mb-3 text-gray-300"></i><span
+                                class="text-sm font-bold block">침칠봉</span></div>
+                        <div><i data-lucide="circle" class="mx-auto mb-3 text-gray-300"></i><span
+                                class="text-sm font-bold block">도징링</span></div>
+                    </div>
+                </div>
+
+                <!-- Machine Maintenance -->
+                <div
+                    class="bg-coffee-950/50 p-6 border-t border-coffee-700 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-red-900/50 p-2 rounded-full text-red-400"><i data-lucide="wrench"
+                                class="w-5 h-5"></i></div>
+                        <div>
+                            <strong class="block text-white">Machine Maintenance</strong>
+                            <span class="text-gray-400 text-xs">장비 수명과 커피 맛을 위한 필수 루틴</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 text-xs text-gray-300">
+                        <span class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i>
+                            백플러싱(매일)</span>
+                        <span class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i>
+                            포터필터 청소(마감)</span>
+                        <span class="flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i>
+                            가스켓 교체(6개월)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 mb-20">
+                <!-- Hand Drip Guide -->
+                <div class="bg-coffee-800/50 p-8 rounded border border-coffee-700">
+                    <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="droplets" class="text-gold-400"></i> 핸드드립 가이드
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-coffee-700 flex items-center justify-center shrink-0 font-bold text-gold-400">
+                                1</div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-200">수직 낙하</h4>
+                                <p class="text-sm text-gray-400 mt-1">굵은 물줄기가 끊기지 않고 3번 동안 수직으로 떨어지도록 유지합니다.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-coffee-700 flex items-center justify-center shrink-0 font-bold text-gold-400">
+                                2</div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-200">와류 (Swirl)</h4>
+                                <p class="text-sm text-gray-400 mt-1">물의 흐름을 이용해 위아래 원두가 골고루 섞이게 합니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Recipe Table -->
+                        <div class="mt-6 bg-white rounded overflow-hidden text-coffee-900 text-center text-sm">
+                            <div class="bg-gold-500 text-coffee-950 font-bold py-2">추출 레시피 (20g / 91°C / 1:15)</div>
+                            <div class="grid grid-cols-3 border-b border-gray-200 bg-gray-50 font-bold text-xs py-2">
+                                <div>TIME</div>
+                                <div>POUR</div>
+                                <div>TOTAL</div>
+                            </div>
+                            <div class="grid grid-cols-3 py-2 border-b border-gray-100">
+                                <div class="font-bold text-coffee-700">00:00</div>
+                                <div>75ml</div>
+                                <div>75ml</div>
+                            </div>
+                            <div class="grid grid-cols-3 py-2 border-b border-gray-100">
+                                <div class="font-bold text-coffee-700">00:50</div>
+                                <div>75ml</div>
+                                <div>150ml</div>
+                            </div>
+                            <div class="grid grid-cols-3 py-2 border-b border-gray-100">
+                                <div class="font-bold text-coffee-700">01:20</div>
+                                <div>75ml</div>
+                                <div>225ml</div>
+                            </div>
+                            <div class="grid grid-cols-3 py-2">
+                                <div class="font-bold text-coffee-700">01:50</div>
+                                <div>75ml</div>
+                                <div>300ml</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Espresso Guide -->
+                <div class="bg-coffee-800/50 p-8 rounded border border-coffee-700">
+                    <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="gauge" class="text-gold-400"></i> 에스프레소 추출
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-coffee-700 flex items-center justify-center shrink-0 font-bold text-gold-400">
+                                1</div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-200">준비 (Dosing)</h4>
+                                <p class="text-sm text-gray-400 mt-1">포터필터에 원두 19.5g을 담고 도징링을 사용합니다.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-coffee-700 flex items-center justify-center shrink-0 font-bold text-gold-400">
+                                2</div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-200">정리 & 탬핑</h4>
+                                <p class="text-sm text-gray-400 mt-1">침칠봉으로 뭉침 제거 후 레벨링, 15kg 압력으로 수평 탬핑.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-coffee-700 flex items-center justify-center shrink-0 font-bold text-gold-400">
+                                3</div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-200">추출 (Extraction)</h4>
+                                <p class="text-sm text-gray-400 mt-1">
+                                    물흘리기 후 장착. <strong class="text-gold-400">24~30초 / 45~50ml</strong> 추출.<br>
+                                    물줄기가 흔들리기 시작할 때까지 추출합니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steaming Infographic -->
+            <div id="steam-process-section" class="bg-white text-coffee-900 rounded-lg p-8 shadow-2xl mb-16">
+                <h3 class="text-2xl font-bold text-coffee-900 mb-12 text-center flex justify-center items-center gap-2">
+                    <i data-lucide="cloud" class="text-gold-500"></i> 우유 스팀 프로세스
+                </h3>
+
+                <div class="relative">
+                    <div class="steaming-line"></div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 relative z-10">
+                        <div class="flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-coffee-900 text-gold-400 rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-lg border-4 border-white">
+                                1</div>
+                            <i data-lucide="milk" class="w-8 h-8 text-coffee-600 mb-2"></i>
+                            <strong class="block mb-1">우유 양</strong>
+                            <span class="text-xs text-gray-500">230ml<br>(코 부분)</span>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-coffee-900 text-gold-400 rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-lg border-4 border-white">
+                                2</div>
+                            <i data-lucide="crosshair" class="w-8 h-8 text-coffee-600 mb-2"></i>
+                            <strong class="block mb-1">위치</strong>
+                            <span class="text-xs text-gray-500">1/4 지점<br>(1시/5시)</span>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-coffee-900 text-gold-400 rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-lg border-4 border-white">
+                                3</div>
+                            <i data-lucide="arrow-down-to-line" class="w-8 h-8 text-coffee-600 mb-2"></i>
+                            <strong class="block mb-1">높이</strong>
+                            <span class="text-xs text-gray-500">노즐 살짝<br>잠길 정도</span>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-coffee-900 text-gold-400 rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-lg border-4 border-white">
+                                4</div>
+                            <i data-lucide="wind" class="w-8 h-8 text-coffee-600 mb-2"></i>
+                            <strong class="block mb-1">공기주입</strong>
+                            <span class="text-xs text-gray-500">'칙~'<br>소리듣기</span>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-coffee-900 text-gold-400 rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-lg border-4 border-white">
+                                5</div>
+                            <i data-lucide="refresh-cw" class="w-8 h-8 text-coffee-600 mb-2"></i>
+                            <strong class="block mb-1">롤링</strong>
+                            <span class="text-xs text-gray-500">수위 체크<br>혼합</span>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-coffee-900 text-gold-400 rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-lg border-4 border-white">
+                                6</div>
+                            <i data-lucide="thermometer" class="w-8 h-8 text-coffee-600 mb-2"></i>
+                            <strong class="block mb-1">온도</strong>
+                            <span class="text-xs text-gray-500">55도<br>(따뜻함)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-gray-100">
+                    <div class="text-center p-4 bg-gray-50 rounded">
+                        <strong class="block text-coffee-800 mb-1">1. 안정화</strong>
+                        <span class="text-xs text-gray-500">높은 위치(5cm)<br>크레마와 섞기</span>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded">
+                        <strong class="block text-coffee-800 mb-1">2. 무늬 띄우기</strong>
+                        <span class="text-xs text-gray-500">낮은 위치(1cm)<br>유량 늘리기</span>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded">
+                        <strong class="block text-coffee-800 mb-1">3. 핸들링</strong>
+                        <span class="text-xs text-gray-500">일정한 유량으로<br>좌우 흔들기</span>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded">
+                        <strong class="block text-coffee-800 mb-1">4. 마무리</strong>
+                        <span class="text-xs text-gray-500">유량 줄이며<br>직선으로 가르기</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Variations -->
+            <div class="bg-coffee-900 border border-coffee-700 rounded-xl p-8">
+                <h3 class="text-2xl font-display text-gold-400 mb-10 text-center">Menu Variations</h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                    <!-- Espresso -->
+                    <div class="text-center group">
+                        <div class="menu-cup group-hover:-translate-y-2 transition-transform duration-300">
+                            <div class="menu-cup-handle"></div>
+                            <div class="layer h-[30%] bg-coffee-950">Espresso</div>
+                        </div>
+                        <h4 class="mt-4 font-bold text-white text-sm">Espresso</h4>
+                        <span class="text-[10px] text-gray-400">30ml Extract</span>
+                    </div>
+                    <!-- Americano -->
+                    <div class="text-center group">
+                        <div class="menu-cup group-hover:-translate-y-2 transition-transform duration-300">
+                            <div class="menu-cup-handle"></div>
+                            <div class="layer h-[20%] bg-coffee-950">Espresso</div>
+                            <div class="layer h-[70%] bg-blue-200 text-blue-800">Water</div>
+                        </div>
+                        <h4 class="mt-4 font-bold text-white text-sm">Americano</h4>
+                        <span class="text-[10px] text-gray-400">Water + Espresso</span>
+                    </div>
+                    <!-- Flat White -->
+                    <div class="text-center group">
+                        <div class="menu-cup group-hover:-translate-y-2 transition-transform duration-300">
+                            <div class="menu-cup-handle"></div>
+                            <div class="layer h-[10%] bg-white text-gray-500">Foam</div>
+                            <div class="layer h-[60%] bg-yellow-100 text-yellow-800">Steam Milk</div>
+                            <div class="layer h-[30%] bg-coffee-950">Espresso</div>
+                        </div>
+                        <h4 class="mt-4 font-bold text-white text-sm">Flat White</h4>
+                        <span class="text-[10px] text-gray-400">Thin Foam</span>
+                    </div>
+                    <!-- Latte -->
+                    <div class="text-center group">
+                        <div class="menu-cup group-hover:-translate-y-2 transition-transform duration-300">
+                            <div class="menu-cup-handle"></div>
+                            <div class="layer h-[20%] bg-white text-gray-500">Foam</div>
+                            <div class="layer h-[60%] bg-yellow-100 text-yellow-800">Steam Milk</div>
+                            <div class="layer h-[20%] bg-coffee-950">Espresso</div>
+                        </div>
+                        <h4 class="mt-4 font-bold text-white text-sm">Cafe Latte</h4>
+                        <span class="text-[10px] text-gray-400">Standard</span>
+                    </div>
+                    <!-- Cappuccino -->
+                    <div class="text-center group">
+                        <div class="menu-cup group-hover:-translate-y-2 transition-transform duration-300">
+                            <div class="menu-cup-handle"></div>
+                            <div class="layer h-[40%] bg-white text-gray-500">Foam</div>
+                            <div class="layer h-[40%] bg-yellow-100 text-yellow-800">Steam Milk</div>
+                            <div class="layer h-[20%] bg-coffee-950">Espresso</div>
+                        </div>
+                        <h4 class="mt-4 font-bold text-white text-sm">Cappuccino</h4>
+                        <span class="text-[10px] text-gray-400">Rich Foam</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Section: Contact -->
+    <section id="contact" class="py-24 bg-white border-t border-coffee-200">
+        <div class="container mx-auto px-6 max-w-4xl text-center">
+            <div class="mb-12">
+                <span class="text-coffee-600 tracking-widest text-xs uppercase">Join Us</span>
+                <h2 class="text-3xl md:text-4xl font-display mt-2 text-coffee-900">Start Your Coffee Journey</h2>
+                <p class="text-gray-500 mt-4">소원커피와 함께 커피 전문가의 꿈을 키워보세요.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="p-6 bg-coffee-50 rounded-lg">
+                    <i data-lucide="phone" class="w-8 h-8 text-gold-500 mx-auto mb-4"></i>
+                    <h4 class="font-bold text-coffee-900 mb-2">Phone</h4>
+                    <p class="text-gray-600 text-sm">010-5606-0845</p>
+                </div>
+                <div class="p-6 bg-coffee-50 rounded-lg">
+                    <i data-lucide="mail" class="w-8 h-8 text-gold-500 mx-auto mb-4"></i>
+                    <h4 class="font-bold text-coffee-900 mb-2">Email</h4>
+                    <p class="text-gray-600 text-sm">galeb76@naver.com</p>
+                </div>
+                <div class="p-6 bg-coffee-50 rounded-lg">
+                    <i data-lucide="map" class="w-8 h-8 text-gold-500 mx-auto mb-4"></i>
+                    <h4 class="font-bold text-coffee-900 mb-2">Location</h4>
+                    <p class="text-gray-600 text-sm">경기도 부천시 소사로 203 2층 소원커피</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-coffee-950 text-coffee-300 py-12 border-t border-coffee-900">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                    <i data-lucide="coffee" class="text-gold-400 w-6 h-6"></i>
+                    <span class="font-display text-xl font-bold text-white tracking-wider">SOWON COFFEE</span>
+                </div>
+                <p class="text-sm">Specialty Roastery & Academy</p>
+                <p class="text-sm mt-1">대표: 이광복</p>
+            </div>
+            <div class="text-sm text-center md:text-right">
+                <p>Copyright © 2024 SOWON COFFEE. All rights reserved.</p>
+                <p class="mt-2 text-coffee-500">
+                    본 사이트는 소원커피 교육 자료를 위한 페이지입니다.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn"
+        class="fixed bottom-8 right-8 bg-gold-500 text-white p-3 rounded-full shadow-lg opacity-0 transition-opacity duration-300 hover:bg-gold-600 z-40 hidden">
+        <i data-lucide="arrow-up" class="w-6 h-6"></i>
+    </button>
+
+    <script>
+        // 1. Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 2. Mobile Menu Toggle Logic
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 3. Scroll Animation for Steaming Line & Scroll to Top
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const line = entry.target.querySelector('.steaming-line');
+                    if (line) {
+                        line.classList.add('active');
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const steamSection = document.getElementById('steam-process-section');
+        if (steamSection) {
+            observer.observe(steamSection);
+        }
+
+        // Scroll to Top Logic
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.remove('hidden');
+                setTimeout(() => scrollToTopBtn.classList.remove('opacity-0'), 10);
+            } else {
+                scrollToTopBtn.classList.add('opacity-0');
+                setTimeout(() => scrollToTopBtn.classList.add('hidden'), 300);
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+
+</html>

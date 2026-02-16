@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소원커피 - Coffee & Recipe</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 폰트: 고운 돋움 -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <!-- 아이콘 (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background-color: #fdfbf7;
+            color: #44403c;
+            -webkit-tap-highlight-color: transparent;
+            /* 모바일 터치 하이라이트 제거 */
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 레시피 바 애니메이션 */
+        .recipe-bar-segment {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 가격 텍스트 애니메이션 효과 */
+        .price-transition {
+            transition: color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen relative pb-24">
+
+    <!-- Header -->
+    <header
+        class="sticky top-0 z-50 bg-[#fdfbf7]/95 backdrop-blur-sm border-b border-stone-200 shadow-sm transition-all duration-300">
+        <div class="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="cursor-pointer">
+                <h1 class="text-2xl font-bold text-stone-800 tracking-tight">Sowon Coffee</h1>
+                <p class="text-xs text-stone-500">Coffee & Dessert Recipe</p>
+            </div>
+            <button onclick="scrollToInfo()" class="p-2 rounded-full hover:bg-stone-100 transition text-stone-600">
+                <i data-lucide="info" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Category Filter -->
+        <nav class="max-w-2xl mx-auto px-4 pb-2">
+            <div class="flex space-x-2 overflow-x-auto hide-scrollbar py-2">
+                <button onclick="filterMenu('all')"
+                    class="filter-btn active px-4 py-2 rounded-full text-sm font-bold bg-stone-800 text-white whitespace-nowrap transition-all shadow-md">
+                    전체보기
+                </button>
+                <button onclick="filterMenu('coffee')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    ☕ 커피
+                </button>
+                <button onclick="filterMenu('drink')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    🥤 음료
+                </button>
+                <button onclick="filterMenu('dessert')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    🍰 디저트
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-4 py-6">
+        <div id="menu-grid" class="grid grid-cols-1 gap-5">
+            <!-- 자바스크립트로 카드가 생성됩니다 -->
+        </div>
+
+        <!-- 체험/스페셜 메뉴 섹션 -->
+        <div class="mt-12 mb-6" id="special-section">
+            <h2 class="text-lg font-bold text-stone-800 mb-4 flex items-center">
+                <i data-lucide="sparkles" class="w-5 h-5 mr-2 text-yellow-600"></i> 스페셜 체험
+            </h2>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100">
+                <div class="flex justify-between items-center border-b border-stone-100 pb-4 mb-4">
+                    <div>
+                        <h3 class="font-bold text-stone-800 text-lg">나만의 드립백 만들기</h3>
+                        <p class="text-sm text-stone-500">2인 이상 가능</p>
+                    </div>
+                    <span class="font-bold text-stone-700 text-lg">20,000원</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-stone-800 text-lg">커피 트래블</h3>
+                        <p class="text-sm text-stone-500">2인 이상 가능</p>
+                    </div>
+                    <span class="font-bold text-stone-700 text-lg">30,000원</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div id="info-section"
+            class="mt-8 bg-stone-100 rounded-xl p-6 text-sm text-stone-600 leading-relaxed shadow-inner">
+            <h3 class="font-bold text-stone-800 mb-4 text-base flex items-center">
+                <i data-lucide="clipboard-list" class="w-4 h-4 mr-2"></i> 주문 가이드
+            </h3>
+            <ul class="space-y-3 list-disc list-inside">
+                <li><span class="font-bold text-stone-800">핸드드립 원칙:</span> 아메리카노는 기본 핸드드립으로 추출합니다.</li>
+                <li><span class="font-bold text-stone-800">가격 정책:</span> HOT / ICE 가격은 동일합니다. (일부 음료 제외)</li>
+                <li><span class="font-bold text-stone-800">기본 2샷:</span> 모든 커피는 기본 투 샷(2 shot) 기준입니다.</li>
+                <li><span class="font-bold text-stone-800">추가 옵션:</span> 샷 / 시럽 / 휘핑 추가 시 금액이 발생합니다.</li>
+                <li class="pt-3 border-t border-stone-200 mt-2 text-stone-700">
+                    <span class="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Size Up</span>
+                    아메리카노 <span class="font-bold">+1.0</span> / 라떼 <span class="font-bold">+1.5</span>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-10 text-stone-400 text-xs">
+        <p class="mb-2">Sowon Coffee Recipe Menu</p>
+        <p class="text-[10px] opacity-70">Updated 2024</p>
+    </footer>
+
+    <script>
+        // --- 데이터 정의 ---
+        // recipe 구조: 
+        // 1. 단일 레시피: 배열 [...]
+        // 2. 가변 레시피(HOT/ICE): 객체 { hot: [...], ice: [...] }
+        // prices 구조: (옵션) HOT/ICE 가격이 다른 경우 { hot: 3500, ice: 4000 } 형태로 추가
+        const menuData = [
+            // --- COFFEE ---
+            {
+                id: 'espresso', category: 'coffee', name: '에스프레소', price: 3000, desc: '진한 커피의 정수 (19.5g)', tags: ['HOT'],
+                recipe: [{ label: '에스프레소 19.5g', color: 'bg-stone-900', width: '100%' }]
+            },
+            {
+                id: 'americano_blend', category: 'coffee', name: '아메리카노 (블렌드)', price: 3300, desc: '핸드드립 추출', tags: ['HOT', 'ICE'],
+                isVariable: true,
+                recipe: {
+                    hot: [ // 1차 -> 2차 -> 물 -> 희석 순서로 정렬 (왼쪽부터)
+                        { label: '1차 75', color: 'bg-stone-800', width: '25%' },
+                        { label: '2차 75', color: 'bg-stone-700', width: '25%' },
+                        { label: '물 100', color: 'bg-blue-100', width: '34%' },
+                        { label: '희석 50', color: 'bg-blue-50', width: '16%' }
+                    ],
+                    ice: [ // 1차 -> 2차 -> 얼음 순서로 정렬 (왼쪽부터)
+                        { label: '1차 75', color: 'bg-stone-800', width: '30%' },
+                        { label: '2차 75', color: 'bg-stone-700', width: '30%' },
+                        { label: '얼음', color: 'bg-blue-50', width: '40%' }
+                    ]
+                }
+            },
+            {
+                id: 'americano_single', category: 'coffee', name: '싱글오리진 아메리카노', price: 5000, desc: '프리미엄 원두 핸드드립', tags: ['HOT', 'ICE'],
+                isVariable: true,
+                recipe: {
+                    hot: [ // 1차 -> 2차 -> 3차 -> 4차 순서로 정렬 (왼쪽부터)
+                        { label: '1차 75', color: 'bg-amber-900', width: '25%' },
+                        { label: '2차 75', color: 'bg-amber-800', width: '25%' },
+                        { label: '3차 75', color: 'bg-amber-700', width: '25%' },
+                        { label: '4차 75', color: 'bg-amber-600', width: '25%' }
+                    ],
+                    ice: [ // 1차 -> 2차 -> 얼음 순서로 정렬 (왼쪽부터)
+                        { label: '1차 75', color: 'bg-amber-800', width: '30%' },
+                        { label: '2차 75', color: 'bg-amber-700', width: '30%' },
+                        { label: '얼음', color: 'bg-blue-50', width: '40%' }
+                    ]
+                }
+            },
+            {
+                id: 'cafe_latte', category: 'coffee', name: '카페 라떼', price: 4300, desc: '고소한 우유와 에스프레소', tags: ['HOT', 'ICE'],
+                isVariable: true,
+                recipe: {
+                    hot: [ // 샷 + 스팀우유 220
+                        { label: '스팀우유 220', color: 'bg-orange-50', width: '85%' },
+                        { label: '샷', color: 'bg-stone-800', width: '15%' }
+                    ],
+                    ice: [ // 샷 + 우유 150 + 얼음
+                        { label: '우유 150', color: 'bg-orange-50', width: '50%' },
+                        { label: '얼음', color: 'bg-blue-50', width: '30%' },
+                        { label: '샷', color: 'bg-stone-800', width: '20%' }
+                    ]
+                }
+            },
+            {
+                id: 'coldbrew', category: 'coffee', name: '콜드브루', price: 4500, desc: '깔끔한 맛', tags: ['ICE'],
+                recipe: [ // 얼음 + 70 + 물 140
+                    { label: '물 140', color: 'bg-blue-50', width: '50%' },
+                    { label: '얼음', color: 'bg-blue-100', width: '20%' },
+                    { label: '원액 70', color: 'bg-stone-900', width: '30%' }
+                ]
+            },
+            {
+                id: 'coldbrew_latte', category: 'coffee', name: '콜드브루 라떼', price: 5000, desc: '부드러운 라떼', tags: ['ICE'],
+                recipe: [ // 얼음 + 90 + 우유 90
+                    { label: '우유 90', color: 'bg-orange-50', width: '40%' },
+                    { label: '얼음', color: 'bg-blue-50', width: '20%' },
+                    { label: '원액 90', color: 'bg-stone-900', width: '40%' }
+                ]
+            },
+            {
+                id: 'sweet_latte', category: 'coffee', name: '바닐라 / 모카 / 마끼아또', price: 4800, desc: '달콤한 라떼 통합', tags: ['HOT', 'ICE'],
+                isVariable: true,
+                recipe: {
+                    hot: [ // 샷 + 시럽40 + 스팀우유 220
+                        { label: '스팀우유 220', color: 'bg-orange-50', width: '70%' },
+                        { label: '시럽 40', color: 'bg-yellow-400', width: '15%' },
+                        { label: '샷', color: 'bg-stone-800', width: '15%' }
+                    ],
+                    ice: [ // 샷 + 시럽40 + 얼음 + 우유 150
+                        { label: '우유 150', color: 'bg-orange-50', width: '45%' },
+                        { label: '얼음', color: 'bg-blue-50', width: '25%' },
+                        { label: '시럽 40', color: 'bg-yellow-400', width: '15%' },
+                        { label: '샷', color: 'bg-stone-800', width: '15%' }
+                    ]
+                }
+            },
+            {
+                id: 'einspanner', category: 'coffee', name: '아인슈패너 (비엔나)', price: 5000, desc: '단짠단짠 크림 커피', tags: ['Only ICE'],
+                recipe: [ // 75 + 75 + 휘핑 80 + 소금/초코
+                    { label: '크림 80(설탕+소금)', color: 'bg-white border-b-4 border-stone-800', width: '30%' },
+                    { label: '2차 75', color: 'bg-stone-800', width: '35%' },
+                    { label: '1차 75', color: 'bg-stone-900', width: '35%' }
+                ]
+            },
+
+            // --- DRINK ---
+            {
+                id: 'tea_chamomile', category: 'drink', name: '유기농 허브차 (캐모마일)', price: 3500, desc: '심신 안정 (ICE +500원)', tags: ['HOT', 'ICE'],
+                isVariable: true,
+                prices: { hot: 3500, ice: 4000 }, // 가격 변동 설정
+                recipe: {
+                    hot: [{ label: '물 가득 + 2분', color: 'bg-yellow-50', width: '100%' }],
+                    ice: [
+                        { label: '얼음 가득', color: 'bg-blue-50', width: '40%' },
+                        { label: '식힘', color: 'bg-blue-100', width: '20%' },
+                        { label: '2팩 1분', color: 'bg-yellow-100', width: '40%' }
+                    ]
+                }
+            },
+            {
+                id: 'fruit_latte', category: 'drink', name: '수제 과일 라떼', price: 5000, desc: '딸기 등 계절 과일', tags: ['ICE'],
+                recipe: [ // 얼음 + 과일청 80 + 우유 150
+                    { label: '우유 150', color: 'bg-orange-50', width: '50%' },
+                    { label: '얼음', color: 'bg-blue-50', width: '20%' },
+                    { label: '과일청 80', color: 'bg-red-400', width: '30%' }
+                ]
+            },
+            {
+                id: 'passion_fruit', category: 'drink', name: '수제 패션후르츠', price: 5000, desc: '상큼한 에이드', tags: ['ICE'],
+                recipe: [ // 얼음 + 청 80 + 물 가득
+                    { label: '물 가득', color: 'bg-blue-50', width: '50%' },
+                    { label: '얼음', color: 'bg-blue-100', width: '20%' },
+                    { label: '청 80', color: 'bg-yellow-400', width: '30%' }
+                ]
+            },
+            {
+                id: 'carrot_apple', category: 'drink', name: '당근아 사과해', price: 5000, desc: '100% 착즙 쥬스 (작은컵)', tags: ['ICE'],
+                recipe: [ // 작은컵 (얼음 + 당근1 + 사과1)
+                    { label: '얼음', color: 'bg-blue-50', width: '20%' },
+                    { label: '사과 1팩', color: 'bg-red-200', width: '40%' },
+                    { label: '당근 1팩', color: 'bg-orange-400', width: '40%' }
+                ]
+            },
+            {
+                id: 'choco_greentea', category: 'drink', name: '초코 / 녹차 라떼', price: 4000, desc: '달콤 쌉싸름', tags: ['HOT', 'ICE'],
+                recipe: [
+                    { label: '우유 150ml', color: 'bg-orange-50', width: '70%' },
+                    { label: '파우더 40g', color: 'bg-green-700', width: '30%' }
+                ]
+            },
+            {
+                id: 'iced_tea', category: 'drink', name: '복숭아 아이스티', price: 3000, desc: '시원한 아이스티', tags: ['ICE'],
+                recipe: [
+                    { label: '물', color: 'bg-blue-50', width: '60%' },
+                    { label: '얼음', color: 'bg-blue-100', width: '20%' },
+                    { label: '원액 80ml', color: 'bg-amber-600', width: '20%' }
+                ]
+            },
+
+            // --- DESSERT ---
+            {
+                id: 'cake_basque', category: 'dessert', name: '바스크 치즈케이크', price: 6000, desc: '진한 치즈의 풍미', tags: ['CAKE'], recipe: null
+            },
+            {
+                id: 'cake_strawberry', category: 'dessert', name: '딸기 케이크', price: 7000, desc: '부드러운 생크림', tags: ['Season'], recipe: null
+            },
+            {
+                id: 'snack_oranda', category: 'dessert', name: '수제 오란다', price: 2000, desc: '바삭하고 달콤한 간식', tags: ['Snack'], recipe: null
+            },
+            {
+                id: 'snack_walnut', category: 'dessert', name: '수제 호두정과', price: 5000, desc: '고소한 영양 간식 (선물용 1.5만)', tags: ['Gift'], recipe: null
+            }
+        ];
+
+        const grid = document.getElementById('menu-grid');
+        const btns = document.querySelectorAll('.filter-btn');
+
+        function formatPrice(price) {
+            return price.toLocaleString() + '원';
+        }
+
+        function scrollToInfo() {
+            document.getElementById('info-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 인포그래픽 바 생성 함수 (단일 또는 Hot/Ice)
+        function createRecipeBarHtml(recipeData, type = 'default') {
+            if (!recipeData) return '';
+
+            // 그래프 바 높이 h-8
+            let barHtml = `<div class="mt-4 w-full h-8 bg-stone-100 rounded-lg overflow-hidden flex shadow-inner border border-stone-200 recipe-bar-segment">`;
+
+            recipeData.forEach(part => {
+                const isDark = part.color.includes('stone-900') || part.color.includes('stone-800') || part.color.includes('stone-700') || part.color.includes('green-700') || part.color.includes('amber-800');
+                const textColor = isDark ? 'text-white/90' : 'text-stone-700/90';
+
+                barHtml += `<div class="${part.color} h-full flex items-center justify-center text-xs font-bold ${textColor} relative group hover:opacity-90 transition-opacity" style="width: ${part.width}">
+                    <span class="truncate px-1">${part.label}</span>
+                </div>`;
+            });
+            barHtml += '</div>';
+            return barHtml;
+        }
+
+        function toggleRecipe(id, type) {
+            const container = document.getElementById(`recipe-container-${id}`);
+            const item = menuData.find(m => m.id === id);
+            if (!item || !item.recipe[type]) return;
+
+            // Update Buttons
+            const btnHot = document.getElementById(`btn-hot-${id}`);
+            const btnIce = document.getElementById(`btn-ice-${id}`);
+
+            if (type === 'hot') {
+                btnHot.classList.add('bg-red-100', 'text-red-700', 'border-red-200');
+                btnHot.classList.remove('bg-white', 'text-stone-400');
+                btnIce.classList.remove('bg-blue-100', 'text-blue-700', 'border-blue-200');
+                btnIce.classList.add('bg-white', 'text-stone-400');
+            } else {
+                btnIce.classList.add('bg-blue-100', 'text-blue-700', 'border-blue-200');
+                btnIce.classList.remove('bg-white', 'text-stone-400');
+                btnHot.classList.remove('bg-red-100', 'text-red-700', 'border-red-200');
+                btnHot.classList.add('bg-white', 'text-stone-400');
+            }
+
+            // Update Price (if variable price exists)
+            if (item.prices && item.prices[type]) {
+                const priceEl = document.getElementById(`price-${id}`);
+                if (priceEl) {
+                    priceEl.innerText = formatPrice(item.prices[type]);
+                    // 반짝이는 효과 추가
+                    priceEl.classList.remove('text-stone-700');
+                    priceEl.classList.add('text-stone-400');
+                    setTimeout(() => {
+                        priceEl.classList.remove('text-stone-400');
+                        priceEl.classList.add('text-stone-700');
+                    }, 150);
+                }
+            }
+
+            // Update Bar
+            container.innerHTML = createRecipeBarHtml(item.recipe[type]);
+        }
+
+        function renderMenu(filterCategory) {
+            grid.innerHTML = '';
+
+            // 필터 버튼 스타일 업데이트
+            btns.forEach(btn => {
+                if (btn.innerText.includes(filterCategory === 'all' ? '전체' :
+                    filterCategory === 'coffee' ? '커피' :
+                        filterCategory === 'drink' ? '음료' : '디저트')) {
+                    btn.classList.remove('bg-white', 'text-stone-600', 'border');
+                    btn.classList.add('bg-stone-800', 'text-white');
+                } else {
+                    btn.classList.add('bg-white', 'text-stone-600', 'border');
+                    btn.classList.remove('bg-stone-800', 'text-white');
+                }
+            });
+
+            const filteredData = filterCategory === 'all'
+                ? menuData
+                : menuData.filter(item => item.category === filterCategory);
+
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl p-5 shadow-sm border border-stone-100 hover:shadow-md transition-shadow duration-300';
+
+                // Tags
+                let tagsHtml = '';
+                if (item.tags) {
+                    item.tags.forEach(tag => {
+                        let tagClass = 'text-stone-500 bg-stone-100';
+                        if (tag === 'HOT') tagClass = 'text-red-600 bg-red-50 border border-red-100';
+                        if (tag === 'ICE') tagClass = 'text-blue-600 bg-blue-50 border border-blue-100';
+                        if (tag === 'Only ICE') tagClass = 'text-blue-700 bg-blue-100 font-bold';
+                        if (tag === 'Best' || tag === 'Gift') tagClass = 'text-amber-700 bg-amber-50 border border-amber-100';
+
+                        tagsHtml += `<span class="text-[10px] px-2 py-0.5 rounded-full ${tagClass} mr-1">${tag}</span>`;
+                    });
+                }
+
+                // Recipe Area Logic
+                let recipeHtml = '';
+                if (item.recipe) {
+                    if (item.isVariable) {
+                        // Variable (Hot/Ice Switcher)
+                        // Default to Hot if available, else Ice
+                        const initialType = 'hot';
+                        const initialRecipe = item.recipe.hot;
+
+                        recipeHtml = `
+                            <div class="mt-4 flex space-x-2">
+                                <button id="btn-hot-${item.id}" onclick="toggleRecipe('${item.id}', 'hot')" class="text-xs px-3 py-1 rounded-full border border-red-200 bg-red-100 text-red-700 font-bold transition-colors">HOT</button>
+                                <button id="btn-ice-${item.id}" onclick="toggleRecipe('${item.id}', 'ice')" class="text-xs px-3 py-1 rounded-full border border-stone-200 bg-white text-stone-400 font-medium hover:bg-stone-50 transition-colors">ICE</button>
+                            </div>
+                            <div id="recipe-container-${item.id}">
+                                ${createRecipeBarHtml(initialRecipe)}
+                            </div>
+                        `;
+                    } else {
+                        // Static Recipe
+                        recipeHtml = createRecipeBarHtml(item.recipe);
+                    }
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-bold text-stone-800 text-lg tracking-tight">${item.name}</h3>
+                            <p class="text-xs text-stone-400 mt-1">${item.desc}</p>
+                        </div>
+                        <span id="price-${item.id}" class="price-transition font-bold text-stone-700 text-lg whitespace-nowrap">${formatPrice(item.price)}</span>
+                    </div>
+                    <div class="flex flex-wrap mt-2">
+                        ${tagsHtml}
+                    </div>
+                    ${recipeHtml}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 초기 렌더링
+        renderMenu('all');
+        lucide.createIcons();
+
+        // 전역 함수
+        window.filterMenu = renderMenu;
+        window.scrollToInfo = scrollToInfo;
+        window.toggleRecipe = toggleRecipe;
+
+    </script>
+</body>
+
+</html>

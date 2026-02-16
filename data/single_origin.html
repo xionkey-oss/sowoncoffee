@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소원커피 - Single Origin Menu</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 폰트: 고운 돋움 -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <!-- 아이콘 (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background-color: #fdfbf7;
+            color: #44403c;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .sold-out {
+            opacity: 0.5;
+            position: relative;
+            filter: grayscale(100%);
+        }
+
+        /* 관리자 모드가 아닐 때만 클릭 방지 */
+        body:not(.admin-mode) .sold-out {
+            pointer-events: none;
+        }
+
+        .sold-out::after {
+            content: 'SOLD OUT';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            background-color: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-radius: 0.5rem;
+            border: 2px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen relative pb-24">
+
+    <!-- Header -->
+    <header
+        class="sticky top-0 z-50 bg-[#fdfbf7]/95 backdrop-blur-sm border-b border-stone-200 shadow-sm transition-all duration-300">
+        <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="cursor-pointer">
+                <h1 class="text-2xl font-bold text-stone-800 tracking-tight">Sowon Coffee</h1>
+                <p class="text-xs text-stone-500">Specialty Single Origin</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleAdminMode()" id="admin-btn"
+                    class="flex items-center px-3 py-1.5 rounded-full hover:bg-stone-100 transition text-stone-400 border border-transparent">
+                    <i data-lucide="lock" class="w-4 h-4"></i>
+                    <span class="ml-1 text-xs">관리</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Filter -->
+        <nav class="max-w-3xl mx-auto px-4 pb-2">
+            <div class="flex space-x-2 overflow-x-auto hide-scrollbar py-2">
+                <button onclick="filterMenu('all')"
+                    class="filter-btn active px-4 py-2 rounded-full text-sm font-bold bg-stone-800 text-white whitespace-nowrap transition-all shadow-md">
+                    전체보기
+                </button>
+                <button onclick="filterMenu('daily')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    ☕ 데일리
+                </button>
+                <button onclick="filterMenu('decaf')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    🌿 디카페인
+                </button>
+                <button onclick="filterMenu('special')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    ✨ 스페셜
+                </button>
+                <button onclick="filterMenu('gesha')"
+                    class="filter-btn px-4 py-2 rounded-full text-sm font-bold bg-white text-stone-600 border border-stone-200 whitespace-nowrap hover:bg-stone-100 transition-all">
+                    🏆 게샤
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-4 py-6">
+
+        <!-- Admin Notice -->
+        <div id="admin-notice"
+            class="hidden mb-4 bg-stone-800 text-white px-4 py-3 rounded-lg text-sm flex justify-between items-center shadow-lg">
+            <span class="flex items-center"><i data-lucide="settings" class="w-4 h-4 mr-2"></i> 관리자 모드: 변경사항이 모든 기기에 실시간
+                반영됩니다.</span>
+            <button onclick="toggleAdminMode()"
+                class="text-xs bg-white text-stone-800 px-2 py-1 rounded font-bold">종료</button>
+        </div>
+
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Loading Indicator -->
+            <div class="col-span-full text-center py-10 text-stone-400">
+                <p>데이터베이스 연결 중...</p>
+            </div>
+        </div>
+
+        <!-- Price Guide -->
+        <div class="mt-8 bg-stone-100 rounded-xl p-6 text-sm text-stone-600 leading-relaxed shadow-inner">
+            <h3 class="font-bold text-stone-800 mb-2 text-base flex items-center">
+                <i data-lucide="info" class="w-4 h-4 mr-2"></i> 이용 안내
+            </h3>
+            <ul class="space-y-2 list-disc list-inside text-xs sm:text-sm">
+                <li>모든 핸드드립은 <span class="font-bold text-stone-800">HOT / ICE 가격이 동일</span>합니다.</li>
+                <li>원두 구매 시 <span class="font-bold text-stone-800">500g (20%), 1kg (30%) 할인</span> 적용됩니다.</li>
+                <li>커피를 고르기 어려우시면 바리스타에게 편하게 문의해주세요.</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-10 text-stone-400 text-xs">
+        <p class="mb-2">Sowon Coffee Roastery</p>
+        <p class="text-[10px] opacity-70">Single Origin Line-up</p>
+    </footer>
+
+    <!-- Firebase SDK (Module) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ==========================================
+        // [설정 완료] 전달주신 키가 적용되었습니다.
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXjHZWtI5O9-w75oo8ozD0NDPdlVfX9-4",
+            authDomain: "gen-lang-client-0558719080.firebaseapp.com",
+            projectId: "gen-lang-client-0558719080",
+            storageBucket: "gen-lang-client-0558719080.firebasestorage.app",
+            messagingSenderId: "948106679587",
+            appId: "1:948106679587:web:2290418581d5ebd0eca896",
+            measurementId: "G-HJJG5GPJWQ"
+        };
+        // ==========================================
+
+        let db;
+        let soldOutItems = []; // Firebase에서 받아올 품절 리스트
+
+        // Firebase 초기화
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            initRealtimeListener();
+        } catch (e) {
+            console.error("Firebase 초기화 오류:", e);
+            alert("Firebase 설정 오류: 코드를 확인해주세요.");
+        }
+
+        // 실시간 데이터 동기화 함수
+        async function initRealtimeListener() {
+            const docRef = doc(db, "raontree", "menu_status"); // 컬렉션: raontree, 문서: menu_status
+
+            // 문서가 없으면 최초 생성 (빈 리스트)
+            // *주의: 권한 부족 오류 시 Firestore 규칙을 수정해야 할 수도 있습니다.
+            try {
+                // 실시간 리스너 연결
+                onSnapshot(docRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        soldOutItems = docSnap.data().soldOutList || [];
+                        console.log("실시간 업데이트됨:", soldOutItems);
+                        renderMenu(currentCategory); // 화면 갱신
+                    } else {
+                        // 문서가 없으면 생성 시도
+                        setDoc(docRef, { soldOutList: [] });
+                    }
+                }, (error) => {
+                    console.error("실시간 데이터 수신 오류:", error);
+                    // 권한 오류 등의 경우 로컬 데이터라도 보여줌
+                    renderMenu(currentCategory);
+                });
+            } catch (e) {
+                console.error("리스너 연결 실패", e);
+            }
+        }
+
+        // 전역 함수로 노출 (모듈 밖에서 호출 가능하도록)
+        window.updateSoldOutStatus = async function (id) {
+            if (!db) {
+                alert("데이터베이스 연결 실패");
+                return;
+            }
+
+            const docRef = doc(db, "raontree", "menu_status");
+            const isSoldOut = soldOutItems.includes(id);
+
+            try {
+                if (isSoldOut) {
+                    // 품절 해제 (배열에서 제거)
+                    await updateDoc(docRef, {
+                        soldOutList: arrayRemove(id)
+                    });
+                } else {
+                    // 품절 처리 (배열에 추가)
+                    await updateDoc(docRef, {
+                        soldOutList: arrayUnion(id)
+                    });
+                }
+                // renderMenu 호출 불필요 (onSnapshot이 자동 감지)
+            } catch (e) {
+                console.error("데이터 업데이트 실패:", e);
+                alert("업데이트 실패: Firestore '규칙' 탭에서 읽기/쓰기 권한을 허용했는지 확인해주세요.");
+            }
+        };
+
+        // --- 메뉴 데이터 ---
+        const menuData = [
+            // 1. DAILY (Blend & Basic)
+            { id: 'blend_purple', category: 'daily', country: 'Blend', name: '소원커피 블랜드 퍼플', note: '과테말라, 에티오피아, 콜롬비아, 브라질 블렌딩', priceDrip: 3300, priceBean: 5000, tags: ['House Blend'] },
+            { id: 'colombia_popayan', category: 'daily', country: 'Colombia', name: '콜롬비아 포파얀 클라쎄 (Dark)', note: '카라멜, 아몬드, 밀크초콜릿, 브라운 슈가, 묵직함', priceDrip: 5000, priceBean: 10000, tags: ['Dark'] },
+            { id: 'guatemala_waykan', category: 'daily', country: 'Guatemala', name: '과테말라 우에우에테낭고 와이칸 (Dark)', note: '바닐라, 초코, 단맛, 복합적, 좋은 균형감', priceDrip: 5000, priceBean: 10000, tags: ['Dark'] },
+            { id: 'costarica_shb', category: 'daily', country: 'Costa Rica', name: '코스타리카 산호세 따라주 SHB (Dark)', note: '만다린, 비스킷, 시리얼, 볶은 아몬드, 메이플시럽', priceDrip: 5000, priceBean: 10000, tags: ['Dark'] },
+
+            // 2. DECAF
+            { id: 'decaf_sidamo', category: 'decaf', country: 'Ethiopia', name: '에티오피아 시다모 디카페인 N', note: '민트, 보리, 레몬그라스, 오렌지, 포도', priceDrip: 4300, priceBean: 12000, tags: ['Decaf'] },
+            { id: 'decaf_brazil', category: 'decaf', country: 'Brazil', name: '브라질 NY2 게르만 CO2 (Decaf)', note: '초콜릿, 부드러움, 균형감', priceDrip: 4300, priceBean: 12000, tags: ['Decaf'] },
+
+            // 3. SPECIAL (Includes Ethiopia, Kenya, Brazil Special, etc.)
+            { id: 'ethiopia_limu', category: 'special', country: 'Ethiopia', name: '에티오피아 리무 레사드 아바불구 N', note: '복숭아, 블루베리, 크랜베리, 초콜릿, 꿀', priceDrip: 5500, priceBean: 12000, tags: ['Natural'] },
+            { id: 'ethiopia_halo', category: 'special', country: 'Ethiopia', name: '에티오피아 예가체프 할로 베리티 W', note: '오렌지, 사탕수수, 바닐라, 살구, 밝은 산미', priceDrip: 5500, priceBean: 13000, tags: ['Washed'] },
+            { id: 'ethiopia_shakiso', category: 'special', country: 'Ethiopia', name: '에티오피아 시다모 구지 사키소 타데 N', note: '카카오닙스, 베리류, 메론, 브라운슈가, 홍차', priceDrip: 5500, priceBean: 12000, tags: ['Natural'] },
+            { id: 'ethiopia_jimma', category: 'special', country: 'Ethiopia', name: '에티오피아 오로미아 짐마 게라 투마테소 W', note: '오렌지, 자두, 우롱차, 시트러스', priceDrip: 5500, priceBean: 12000, tags: ['Washed'] },
+            { id: 'ethiopia_bombee', category: 'special', country: 'Ethiopia', name: '에티오피아 시다마 벤사 봄베 N', note: '흑설탕, 라임, 홍차, 바닐라, 자스민', priceDrip: 5500, priceBean: 12000, tags: ['Natural'] },
+            { id: 'ethiopia_arbegona', category: 'special', country: 'Ethiopia', name: '에티오피아 시다마 아르베고나 N', note: '포도, 아로니아, 블루베리, 초콜릿, 캐러멜', priceDrip: 5500, priceBean: 12000, tags: ['Natural'] },
+            { id: 'brazil_grape', category: 'special', country: 'Brazil', name: '브라질 빈할 청포도 젤리', note: '포도주스, 건포도, 청포도, 패션후르츠, 이중발효', priceDrip: 5500, priceBean: 13000, tags: ['Unique'] },
+            { id: 'brazil_coconut', category: 'special', country: 'Brazil', name: '브라질 빈할 코코넛', note: '코코넛, 헤이즐럿, 밝은 산미, 이중발효', priceDrip: 5500, priceBean: 13000, tags: ['Unique'] },
+            { id: 'kenya_mugaga', category: 'special', country: 'Kenya', name: '케냐 무가가 키에니 AA TOP W', note: '오렌지, 사탕수수, 바닐라, 살구, 밝은 산미', priceDrip: 5500, priceBean: 13000, tags: ['Kenya'] },
+            { id: 'colombia_melon', category: 'special', country: 'Colombia', name: '콜롬비아 안티오키아 엘 푸투로 메론 무산소 H', note: '멜론, 수박바, 딸기 아이스크림, 사과쥬스, 치즈케이크', priceDrip: 7000, priceBean: 15000, tags: ['Funky'] },
+            { id: 'colombia_pink_lactic', category: 'special', country: 'Colombia', name: '콜롬비아 산 아돌포 엘 디비소 핑크버번 락틱 W', note: '딸기, 카라멜, 붉은 과일류, 라벤더, 사과, 고추씨', priceDrip: 8000, priceBean: 20000, tags: ['Pink Bourbon'] },
+
+            // 4. GESHA
+            { id: 'panama_mascarada', category: 'gesha', country: 'Panama', name: '파나마 마스카라다 라 플루', note: '쟈스민, 흰 꽃향기, 청사과, 버터 스카치', priceDrip: 10000, priceBean: 25000, tags: ['New', 'Special'] },
+            { id: 'ethiopia_guji_natural', category: 'gesha', country: 'Ethiopia', name: '에티오피아 오로미아 서 구지 게샤 N', note: '복숭아, 자몽, 적포도, 엘더베리꽃, 산딸기', priceDrip: 5500, priceBean: 12000, tags: ['Natural'] },
+            { id: 'ethiopia_guji_anaerobic', category: 'gesha', country: 'Ethiopia', name: '에티오피아 오로미아 서 구지 게샤 무산소 W', note: '계피, 레드베리, 백포도, 블랙커런트, 젤리', priceDrip: 5500, priceBean: 12000, tags: ['Anaerobic'] },
+            { id: 'panama_esmeralda', category: 'gesha', country: 'Panama', name: '파나마 에스메랄다 게샤 W', note: '쟈스민, 베르가못, 레몬, 꿀(조청), 우아함', priceDrip: 12000, priceBean: 35000, tags: ['Best', 'Premium'] },
+            { id: 'colombia_gesha_n', category: 'gesha', country: 'Colombia', name: '콜롬비아 부에사코 나리노 로스 앙헬레스 게샤 N', note: '라벤더, 포도, 블랙베리, 레몬그라스, 사탕수수', priceDrip: 8000, priceBean: 20000, tags: ['Gesha'] },
+            { id: 'guatemala_gesha_anaerobic', category: 'gesha', country: 'Guatemala', name: '과테말라 아카테낭고 핀카 라 솔레다드 게샤 무산소 W', note: '포도, 스톤프룻, 홍차, 카라멜, 자스민', priceDrip: 8000, priceBean: 20000, tags: ['Gesha'] },
+            { id: 'guatemala_gesha_honey', category: 'gesha', country: 'Guatemala', name: '과테말라 아카테낭고 핀카 라 솔레다드 게샤 H', note: '흑설탕, 라임, 홍차, 바닐라, 자스민', priceDrip: 8000, priceBean: 20000, tags: ['Gesha'] },
+            { id: 'peru_gesha', category: 'gesha', country: 'Peru', name: '페루 라 팔레스티나 게샤 W', note: '살구, 만다린, 얼그레이, 깔끔함', priceDrip: 8000, priceBean: 20000, tags: ['Gesha'] },
+        ];
+
+        // --- Country Info ---
+        const countryInfo = {
+            'Blend': { style: 'bg-stone-600 text-white border-stone-600', flagUrl: 'KakaoTalk_20211101_152531287_02.png' },
+            'Ethiopia': { style: 'bg-rose-100 text-rose-800 border-rose-200', flagUrl: 'https://flagcdn.com/w20/et.png' },
+            'Colombia': { style: 'bg-orange-100 text-orange-800 border-orange-200', flagUrl: 'https://flagcdn.com/w20/co.png' },
+            'Guatemala': { style: 'bg-blue-100 text-blue-800 border-blue-200', flagUrl: 'https://flagcdn.com/w20/gt.png' },
+            'Brazil': { style: 'bg-green-100 text-green-800 border-green-200', flagUrl: 'https://flagcdn.com/w20/br.png' },
+            'Panama': { style: 'bg-indigo-100 text-indigo-800 border-indigo-200', flagUrl: 'https://flagcdn.com/w20/pa.png' },
+            'Kenya': { style: 'bg-red-100 text-red-800 border-red-200', flagUrl: 'https://flagcdn.com/w20/ke.png' },
+            'Costa Rica': { style: 'bg-teal-100 text-teal-800 border-teal-200', flagUrl: 'https://flagcdn.com/w20/cr.png' },
+            'Peru': { style: 'bg-amber-100 text-amber-800 border-amber-200', flagUrl: 'https://flagcdn.com/w20/pe.png' },
+            'Default': { style: 'bg-gray-100 text-gray-800 border-gray-200', flagUrl: '' }
+        };
+
+        // UI Variables
+        const grid = document.getElementById('menu-grid');
+        const btns = document.querySelectorAll('.filter-btn');
+        let isAdminMode = false;
+        let currentCategory = 'all';
+
+        // Helper Functions
+        window.formatPrice = (price) => price.toLocaleString();
+
+        window.toggleAdminMode = () => {
+            isAdminMode = !isAdminMode;
+            document.body.classList.toggle('admin-mode', isAdminMode);
+
+            const btn = document.getElementById('admin-btn');
+            const notice = document.getElementById('admin-notice');
+
+            if (isAdminMode) {
+                btn.classList.add('bg-stone-800', 'text-white', 'border-transparent');
+                btn.classList.remove('text-stone-400');
+                btn.innerHTML = `<i data-lucide="unlock" class="w-4 h-4"></i><span class="ml-1 text-xs">관리</span>`;
+                notice.classList.remove('hidden');
+            } else {
+                btn.classList.remove('bg-stone-800', 'text-white', 'border-transparent');
+                btn.classList.add('text-stone-400');
+                btn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i><span class="ml-1 text-xs">관리</span>`;
+                notice.classList.add('hidden');
+            }
+            lucide.createIcons();
+            renderMenu(currentCategory);
+        };
+
+        window.toggleSoldOut = (id) => {
+            if (typeof window.updateSoldOutStatus === 'function') {
+                window.updateSoldOutStatus(id);
+            } else {
+                alert("Firebase 연결 전입니다.");
+            }
+        };
+
+        window.filterMenu = (filterCategory) => {
+            renderMenu(filterCategory);
+        };
+
+        // Render Function
+        window.renderMenu = (filterCategory) => {
+            currentCategory = filterCategory;
+            grid.innerHTML = '';
+
+            // Update Filter Buttons
+            btns.forEach(btn => {
+                const btnType = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                if (btnType === filterCategory) {
+                    btn.classList.remove('bg-white', 'text-stone-600', 'border');
+                    btn.classList.add('bg-stone-800', 'text-white');
+                } else {
+                    btn.classList.add('bg-white', 'text-stone-600', 'border');
+                    btn.classList.remove('bg-stone-800', 'text-white');
+                }
+            });
+
+            // Filter Data
+            let filteredData = filterCategory === 'all'
+                ? [...menuData]
+                : menuData.filter(item => item.category === filterCategory);
+
+            // Sort: Sold Out Items to Bottom
+            filteredData.sort((a, b) => {
+                const isASoldOut = soldOutItems.includes(a.id);
+                const isBSoldOut = soldOutItems.includes(b.id);
+                return (isASoldOut === isBSoldOut) ? 0 : isASoldOut ? 1 : -1;
+            });
+
+            // Draw Cards
+            filteredData.forEach(item => {
+                const isSoldOut = soldOutItems.includes(item.id);
+                const soldOutClass = isSoldOut ? 'sold-out' : '';
+
+                let tagsHtml = '';
+                if (item.tags) {
+                    item.tags.forEach(tag => {
+                        let tagClass = 'text-stone-500 bg-stone-100';
+                        if (tag === 'Gesha' || tag === 'Premium') tagClass = 'text-amber-700 bg-amber-50 border border-amber-100';
+                        if (tag === 'Best' || tag === 'New') tagClass = 'text-red-600 bg-red-50 font-bold';
+                        if (tag === 'Decaf') tagClass = 'text-green-700 bg-green-50';
+                        tagsHtml += `<span class="text-[10px] px-2 py-0.5 rounded-full ${tagClass} mr-1">${tag}</span>`;
+                    });
+                }
+
+                const country = countryInfo[item.country] || countryInfo['Default'];
+                const flagHtml = country.flagUrl ? `<img src="${country.flagUrl}" alt="${item.country}" class="w-3 h-3 mr-1 inline-block" style="vertical-align: text-top;">` : '';
+
+                const adminBtnHtml = isAdminMode ? `
+                    <button onclick="event.stopPropagation(); toggleSoldOut('${item.id}')" 
+                        class="absolute top-2 right-2 z-20 px-2 py-1 text-[10px] font-bold rounded shadow-sm border transition-colors cursor-pointer
+                        ${isSoldOut
+                        ? 'bg-red-500 text-white border-red-500 hover:bg-red-600'
+                        : 'bg-white text-stone-500 border-stone-200 hover:bg-stone-50 hover:text-stone-800'}">
+                        ${isSoldOut ? '품절 해제' : '품절 처리'}
+                    </button>
+                ` : '';
+
+                const card = document.createElement('div');
+                card.className = `relative bg-white rounded-xl p-5 shadow-sm border border-stone-100 transition-all ${soldOutClass}`;
+
+                card.innerHTML = `
+                    ${adminBtnHtml}
+                    <div class="flex flex-col h-full justify-between">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <span class="flex items-center text-[10px] font-bold px-2 py-0.5 rounded mr-2 border ${country.style}">
+                                    ${flagHtml}
+                                    ${item.country}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="font-bold text-stone-800 text-lg leading-snug break-keep pr-2">${item.name}</h3>
+                                ${!isAdminMode && isSoldOut ? '<span class="text-xs font-bold text-red-500 border border-red-500 px-1 rounded whitespace-nowrap">품절됨</span>' : ''}
+                            </div>
+                            <p class="text-xs text-stone-500 mb-3 leading-relaxed">${item.note}</p>
+                            <div class="flex flex-wrap mb-4">
+                                ${tagsHtml}
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-end border-t border-stone-100 pt-3 mt-1">
+                            <div class="text-center w-1/2 border-r border-stone-100 pr-2">
+                                <span class="block text-[10px] text-stone-400 mb-0.5">핸드드립</span>
+                                <span class="block font-bold text-stone-700 text-lg">${formatPrice(item.priceDrip)}</span>
+                            </div>
+                            <div class="text-center w-1/2 pl-2">
+                                <span class="block text-[10px] text-stone-400 mb-0.5">원두 (100g)</span>
+                                <span class="block font-bold text-stone-600 text-base">${formatPrice(item.priceBean)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        };
+
+        // 초기 실행 (일단 로컬 데이터로 그리기)
+        renderMenu('all');
+    </script>
+</body>
+
+</html>
